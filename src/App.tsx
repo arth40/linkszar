@@ -1,0 +1,82 @@
+import { Routes, Route } from 'react-router-dom';
+import useViewportHeight from './hooks/ViewPortHook';
+import { ProtectedRoute } from './components/routes/ProtectedRoutes';
+import { PublicRoute } from './components/routes/PublicRoutes';
+import { AuthProvider } from './components/AuthProvider';
+import { Toaster } from 'react-hot-toast';
+import NotFound from './pages/NotFound';
+import { useAuthStore } from './store/userStore';
+import { useEffect } from 'react';
+import { getUserData } from './services/userService';
+import { Alert } from '@heroui/alert';
+import { Button } from '@heroui/button';
+
+import { usePWAInstallPrompt } from './hooks/PWAInstallHook';
+
+import Login from './pages/Login';
+import Register from './pages/Register';
+import About from './pages/About';
+
+function App() {
+  useViewportHeight();
+  const { user } = useAuthStore();
+  const { showPrompt, promptToInstall, clearPromptData } =
+    usePWAInstallPrompt();
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      if (user) {
+        await getUserData(user.uid);
+      }
+    };
+    fetchUserDetails();
+  }, [user]);
+
+  return (
+    <AuthProvider>
+      <Toaster />
+      {showPrompt && (
+        <Alert
+          color="primary"
+          description="Bored of visiting website install app on home screen"
+          isClosable
+          endContent={
+            <Button
+              color="primary"
+              size="sm"
+              variant="flat"
+              onPress={promptToInstall}
+            >
+              Install
+            </Button>
+          }
+          onClose={clearPromptData}
+          title="Install app"
+          variant="faded"
+        />
+      )}
+      <Routes>
+        <Route path="/" element={<About />} />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          }
+        />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AuthProvider>
+  );
+}
+
+export default App;

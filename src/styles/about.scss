@@ -1,0 +1,11 @@
+.font-cursive {
+  font-family: 'Dancing Script', cursive;
+}
+
+.font-bungee {
+  font-family: 'Bungee Inline', sans-serif;
+}
+
+.fullheight {
+  height: calc(var(--vh, 1vh) * 100 - 6.5rem);
+}

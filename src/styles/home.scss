@@ -1,0 +1,45 @@
+@use 'mixins' as *;
+
+.desktoplayout {
+  height: calc(100vh - 10.5rem);
+
+  @include respond-to(mobile) {
+    display: none;
+  }
+
+  @include respond-to(desktop) {
+    display: flex;
+  }
+}
+
+.tabletlayout {
+  height: calc(var(--vh, 1vh) * 100 - 10.5rem);
+
+  @include respond-to(mobile) {
+    display: none;
+  }
+
+  @include respond-to(tablet) {
+    display: flex;
+  }
+
+  @include respond-to(desktop) {
+    display: none;
+  }
+}
+
+.mobilelayout {
+  height: calc(var(--vh, 1vh) * 100 - 10.5rem);
+
+  @include respond-to(mobile) {
+    display: flex;
+  }
+
+  @include respond-to(tablet) {
+    display: none;
+  }
+}
+
+.mobilelayoutLiveRoom {
+  height: calc(var(--vh, 1vh) * 100 - 8.5rem);
+}

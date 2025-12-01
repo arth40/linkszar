@@ -1,0 +1,18 @@
+$breakpoint-mobile: 0;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1280px;
+
+@mixin respond-to($device) {
+  @if $device == mobile {
+    // Mobile styles (default) — no media query needed
+    @content;
+  } @else if $device == tablet {
+    @media (min-width: $breakpoint-tablet) {
+      @content;
+    }
+  } @else if $device == desktop {
+    @media (min-width: $breakpoint-desktop) {
+      @content;
+    }
+  }
+}

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" href="/favicon.png" sizes="96x96" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <link rel="icon" type="image/png" href="/pwa-192x192.png" sizes="192x192" />
+    <link rel="icon" type="image/png" href="/pwa-512x512.png" sizes="512x512" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <title>Linkser</title>
+    <meta
+      name="description"
+      content="Linkser, a platform where users can add list of links and create groups and share with others."
+    />
+    <meta
+      name="keywords"
+      content="link management, save links, share links, link groups, easy link sharing, linkser"
+    />
+    <meta
+      property="og:title"
+      content="Linkser - Save and Share Your Links Easily."
+    />
+    <meta
+      property="og:description"
+      content="Save your links on Linkser. Create groups and share with others. Easy and fast link management."
+    />
+    <meta property="og:image" content="https://linkser.com/site-preview.png" />
+    <meta property="og:url" content="https://linkser.com" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Linkser",
+        "url": "https://linkser.com",
+        "logo": "https://linkser.com/favicon.png",
+        "description": "Linkser is a platform where users can add list of links and create groups and share with others.",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://linkser.com/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
