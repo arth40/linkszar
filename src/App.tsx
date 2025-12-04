@@ -15,7 +15,10 @@ import { usePWAInstallPrompt } from './hooks/PWAInstallHook';
 
 import Login from './pages/Login';
 import Register from './pages/Register';
-import About from './pages/About';
+import Home from './pages/Home';
+import Collection from './pages/Collection';
+import Profile from './pages/Profile';
+import Shared from './pages/Shared';
 
 function App() {
   useViewportHeight();
@@ -56,7 +59,38 @@ function App() {
         />
       )}
       <Routes>
-        <Route path="/" element={<About />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/collection"
+          element={
+            <ProtectedRoute>
+              <Collection />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/shared"
+          element={
+            <ProtectedRoute>
+              <Shared />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/login"
           element={
