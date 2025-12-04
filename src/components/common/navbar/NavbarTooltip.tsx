@@ -9,7 +9,7 @@ const NavbarTooltip: React.FC<{ children: React.ReactNode; text: string }> = ({
     <Tooltip
       content={text}
       placement="right"
-      className="linkser-light text-primary-300 bg-primary-50"
+      className="linkszar-light text-primary-300 bg-primary-50"
       closeDelay={1000}
       showArrow
     >
