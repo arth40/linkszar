@@ -1,5 +1,5 @@
 <p align="center" style="margin-bottom:40px">
-  <img src="src/assets/linkser-logo.svg" alt="Linkser" width="150"/>
+  <img src="src/assets/linkszar-logo.svg" alt="Linkszar" width="150"/>
 </p>
 
 # Frontend
@@ -44,8 +44,8 @@
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/arth40/linkser.git
-   cd linkser
+   git clone https://github.com/arth40/linkszar.git
+   cd linkszar
    ```
 
 2. **Install dependencies**
@@ -70,7 +70,7 @@
 
 ## 🧠 Features
 
-- ✅ 
+- ✅
 
 ---
 

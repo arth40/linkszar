@@ -15,9 +15,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'robots.txt', 'apple-touch-icon.png'],
       manifest: {
-        name: 'Linkser',
-        short_name: 'linkser',
-        description: 'Linkser PWA',
+        name: 'Linkszar',
+        short_name: 'linkszar',
+        description: 'Linkszar PWA',
         theme_color: '#9823C2',
         icons: [
           {

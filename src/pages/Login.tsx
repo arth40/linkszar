@@ -39,9 +39,9 @@ const Login: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Linkser ~ Login</title>
-        <meta name="description" content="Login to Linkser" />
-        <link rel="canonical" href="https://linkser.com/login" />
+        <title>Linkszar ~ Login</title>
+        <meta name="description" content="Login to Linkszar" />
+        <link rel="canonical" href="https://linkszar.com/login" />
         <meta name="robots" content="index, follow" />
       </Helmet>
       <AuthLayout>
