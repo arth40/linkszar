@@ -76,9 +76,9 @@ const Register: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Linkser ~ Register</title>
-        <meta name="description" content="Register to Linkser" />
-        <link rel="canonical" href="https://linkser.com/register" />
+        <title>Linkszar ~ Register</title>
+        <meta name="description" content="Register to Linkszar" />
+        <link rel="canonical" href="https://linkszar.com/register" />
         <meta name="robots" content="index, follow" />
       </Helmet>
       <AuthLayout>

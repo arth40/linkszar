@@ -4,7 +4,7 @@ import { heroui } from '@heroui/react';
 // import { heroui } from "@heroui/theme";
 export default heroui({
   themes: {
-    'linkser-light': {
+    'linkszar-light': {
       extend: 'light',
       colors: {
         primary: {

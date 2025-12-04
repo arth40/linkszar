@@ -60,7 +60,7 @@ const PrivacyPolicy: React.FC = () => {
       <p>
         <strong>Contact</strong>
       </p>
-      <p>Email: support@linkser.com</p>
+      <p>Email: support@linkszar.com</p>
     </div>
   );
 };

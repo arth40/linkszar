@@ -11,7 +11,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <HeroUIProvider>
-        <main className="linkser-light text-foreground bg-background">
+        <main className="linkszar-light text-foreground bg-background">
           <ToastProvider />
           <App />
         </main>

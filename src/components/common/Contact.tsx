@@ -9,21 +9,21 @@ const Contact: React.FC = () => {
           <Icon icon="mdi:account-question" />
         </span>
         &nbsp;
-        <span>help@linkser.com</span>
+        <span>help@linkszar.com</span>
       </p>
       <p className="flex items-center gap-2 pt-1">
         <span className="text-primary text-2xl">
           <Icon icon="mdi:code-tags" />
         </span>
         &nbsp;
-        <span>developers@linkser.com</span>
+        <span>developers@linkszar.com</span>
       </p>
       <p className="flex items-center gap-2 pt-1">
         <span className="text-primary text-2xl">
           <Icon icon="mdi:office-building" />
         </span>
         &nbsp;
-        <span>business@linkser.com</span>
+        <span>business@linkszar.com</span>
       </p>
     </>
   );

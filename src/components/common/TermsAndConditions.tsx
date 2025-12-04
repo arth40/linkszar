@@ -5,8 +5,8 @@ const TermsAndConditions: React.FC = () => {
     <div className="space-y-4 text-sm text-gray-500 overflow-y-auto max-h-[70vh] px-4">
       <p>Effective Date: 1st July, 2025</p>
       <p>
-        By using Linkser, you agree to these Terms and Conditions. If you do not
-        agree, do not use the app.
+        By using Linkszar, you agree to these Terms and Conditions. If you do
+        not agree, do not use the app.
       </p>
 
       <p>
@@ -37,8 +37,8 @@ const TermsAndConditions: React.FC = () => {
         <strong>Intellectual Property</strong>
       </p>
       <p>
-        All branding and content belong to Linkser. You may not reuse it without
-        permission.
+        All branding and content belong to Linkszar. You may not reuse it
+        without permission.
       </p>
 
       <p>
@@ -60,7 +60,7 @@ const TermsAndConditions: React.FC = () => {
       <p>
         <strong>Contact</strong>
       </p>
-      <p>Email: support@linkser.com</p>
+      <p>Email: support@linkszar.com</p>
     </div>
   );
 };
