@@ -10,7 +10,7 @@ interface PublicRouteProps {
 
 export const PublicRoute = ({
   children,
-  redirectTo = '/login',
+  redirectTo = '/',
 }: PublicRouteProps) => {
   const { user, initialized } = useAuthStore();
 
