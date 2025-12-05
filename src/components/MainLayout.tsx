@@ -9,7 +9,7 @@ const MainLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
       <Topbar />
       <div className="flex">
         <Navbar />
-        <main className="content md:ml-16 mt-14 flex-1 h-[calc(100vh-7.5rem)] md:h-[calc(100vh-3rem)] border-t-1.5 border-primary-50 p-4">
+        <main className="content md:ml-16 mt-16 flex-1 h-[calc(100vh-8rem)] md:h-[calc(100vh-4rem)] border-t-1.5 border-primary-50 p-4">
           {children}
         </main>
       </div>

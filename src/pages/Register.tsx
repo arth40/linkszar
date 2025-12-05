@@ -13,6 +13,7 @@ const Register: React.FC = () => {
   const [isVisible, setIsVisible] = React.useState(false);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [username, setUsername] = React.useState('');
   const [isValid, setIsValid] = React.useState(false);
 
   const { signUp } = useAuthStore();
@@ -62,6 +63,7 @@ const Register: React.FC = () => {
       {
         email,
         role: 'user',
+        username,
       },
       user?.uid
     );
@@ -96,6 +98,15 @@ const Register: React.FC = () => {
               placeholder="Enter your email"
               type="email"
               onValueChange={setEmail}
+            />
+            <Input
+              isRequired
+              label="Username"
+              labelPlacement="outside"
+              name="username"
+              placeholder="Enter your username"
+              type="text"
+              onValueChange={setUsername}
             />
             <Input
               isRequired

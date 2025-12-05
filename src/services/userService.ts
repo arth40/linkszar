@@ -9,6 +9,7 @@ export const saveUserData = (user: UserDetails, userId?: string) => {
     set(ref(database, 'users/' + userId), {
       email: user.email,
       role: user.role,
+      username: user.username,
     });
     setUserDetails(user);
   }
