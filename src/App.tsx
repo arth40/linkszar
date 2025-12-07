@@ -19,6 +19,7 @@ import Home from './pages/Home';
 import Collection from './pages/Collection';
 import Profile from './pages/Profile';
 import Shared from './pages/Shared';
+import MainLayout from './components/MainLayout';
 
 function App() {
   useViewportHeight();
@@ -59,38 +60,40 @@ function App() {
         />
       )}
       <Routes>
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/collection"
-          element={
-            <ProtectedRoute>
-              <Collection />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/shared"
-          element={
-            <ProtectedRoute>
-              <Shared />
-            </ProtectedRoute>
-          }
-        />
+        <Route element={<MainLayout />}>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/collection"
+            element={
+              <ProtectedRoute>
+                <Collection />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/shared"
+            element={
+              <ProtectedRoute>
+                <Shared />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
         <Route
           path="/login"
           element={
