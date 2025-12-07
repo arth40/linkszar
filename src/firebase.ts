@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getDatabase } from 'firebase/database';
+import { doc, setDoc, getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
   databaseURL: import.meta.env.VITE_FIREBASE_DATABASE,
@@ -18,3 +19,4 @@ const app = initializeApp(firebaseConfig);
 // Initialize services
 export const auth = getAuth(app);
 export const database = getDatabase(app);
+export const firestore = getFirestore(app);

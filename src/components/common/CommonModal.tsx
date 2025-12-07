@@ -13,7 +13,9 @@ interface CommonModalProps {
   title: string;
   children: React.ReactNode;
   isOpen: boolean;
+  placement?: 'center' | 'top' | 'bottom';
   closeModal?: () => void;
+  isCloseButtonVisible?: boolean;
 }
 
 const CommonModal: React.FC<CommonModalProps> = (props) => {
@@ -21,6 +23,8 @@ const CommonModal: React.FC<CommonModalProps> = (props) => {
   useEffect(() => {
     if (props.isOpen) {
       onOpen();
+    } else {
+      onClose();
     }
   }, [props.isOpen]);
   useEffect(() => {
@@ -34,8 +38,10 @@ const CommonModal: React.FC<CommonModalProps> = (props) => {
         className="linkszar-light"
         backdrop="blur"
         size={'md'}
+        placement={props.placement || 'center'}
         isOpen={isOpen}
         onClose={onClose}
+        closeButton={false}
       >
         <ModalContent>
           {(onClose) => (
@@ -45,9 +51,11 @@ const CommonModal: React.FC<CommonModalProps> = (props) => {
               </ModalHeader>
               <ModalBody>{props.children}</ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
+                {props.isCloseButtonVisible && (
+                  <Button variant="flat" onPress={onClose}>
+                    Close
+                  </Button>
+                )}
               </ModalFooter>
             </>
           )}

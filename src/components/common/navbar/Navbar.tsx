@@ -13,7 +13,7 @@ const Navbar: React.FC = () => {
   };
   return (
     <>
-      <div className="navbar w-screen md:w-16 h-16 md:h-screen fixed left-0 bottom-0 md:top-0 border-primary-50 border-t-2 md:border-r-2 md:border-t-0 flex md:flex-col items-center justify-evenly md:justify-start md:pt-18 gap-7 text-4xl md:text-[34px] text-primary-900">
+      <div className="navbar bg-white w-screen md:w-16 h-16 md:h-screen fixed left-0 bottom-0 md:top-0 border-primary-50 border-t-2 md:border-r-2 md:border-t-0 flex md:flex-col items-center justify-evenly md:justify-start md:pt-18 gap-7 text-4xl md:text-[34px] text-primary-900">
         <NavbarTooltip text="Add New">
           <Icon
             icon="icon-park-outline:add-three"
@@ -34,7 +34,7 @@ const Navbar: React.FC = () => {
             onClick={() => navigateToPage('/collection')}
           />
         </NavbarTooltip>
-        <NavbarTooltip text="Groups">
+        <NavbarTooltip text="Shared with me">
           <Icon
             icon="hugeicons:user-group"
             className={`${activeTab === '/shared' ? 'text-primary' : ''} cursor-pointer p-1`}
