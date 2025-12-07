@@ -6,16 +6,19 @@ import { ToastProvider } from '@heroui/toast';
 import './tailwinds.css';
 import './index.scss';
 import App from './App.tsx';
+import { HelmetProvider } from 'react-helmet-async';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
-      <HeroUIProvider>
-        <main className="linkszar-light text-foreground bg-background">
-          <ToastProvider />
-          <App />
-        </main>
-      </HeroUIProvider>
-    </BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter>
+        <HeroUIProvider>
+          <main className="linkszar-light text-foreground bg-background">
+            <ToastProvider />
+            <App />
+          </main>
+        </HeroUIProvider>
+      </BrowserRouter>
+    </HelmetProvider>
   </StrictMode>
 );

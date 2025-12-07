@@ -37,12 +37,13 @@ export const getUserData = async (
   }
 };
 
-export const clearPublicRoomsData = async (
-  userId: string = ''
+export const updateUserName = async (
+  userId: string = '',
+  username: string
 ): Promise<void> => {
   try {
     const userRef = ref(database, `users/${userId}`);
-    await update(userRef, { createdRoom: null, joinedRoom: null });
+    await update(userRef, { username });
     await getUserData(userId);
   } catch (error) {
     console.error('Error getting room data:', error);

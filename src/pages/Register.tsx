@@ -7,7 +7,7 @@ import { Icon } from '@iconify/react';
 import { useAuthStore } from '../store/userStore';
 import { getUserData, saveUserData } from '../services/userService';
 import { useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 const Register: React.FC = () => {
   const [isVisible, setIsVisible] = React.useState(false);

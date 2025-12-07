@@ -7,7 +7,7 @@ import { Icon } from '@iconify/react';
 import { useAuthStore } from '../store/userStore';
 import { useNavigate } from 'react-router-dom';
 import toastMessage from '../services/toasterService';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 const Login: React.FC = () => {
   const [isVisible, setIsVisible] = React.useState(false);
