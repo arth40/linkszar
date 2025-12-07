@@ -1,7 +1,6 @@
 # robots.txt for React + Vite app
 
 User-agent: *
-Allow: /$
 Allow: /login$
 Allow: /register$
 Allow: /about$
