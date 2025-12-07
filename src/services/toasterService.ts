@@ -31,6 +31,22 @@ const successptions: ToastOptions = {
   duration: 2000,
 };
 
+const warningOptions: ToastOptions = {
+  style: {
+    fontFamily: 'Inter',
+    fontSize: '0.8rem',
+    fontWeight: 600,
+    background: '#202020',
+    color: '#ffcc00',
+  },
+  iconTheme: {
+    primary: '#ffcc00',
+    secondary: '#0f1219',
+  },
+  duration: 2000,
+  icon: '⚠️',
+};
+
 const toastMessage = (
   type: 'success' | 'error' | 'warning',
   message: string
@@ -39,6 +55,8 @@ const toastMessage = (
     toast.success(message, successptions);
   } else if (type === 'error') {
     toast.error(message, errorOptions);
+  } else if (type === 'warning') {
+    toast.error(message, warningOptions);
   }
 };
 

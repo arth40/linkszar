@@ -1,15 +1,20 @@
 import { get, ref, set, update } from 'firebase/database';
-import { database } from '../firebase';
+import { database, firestore } from '../firebase';
 import type { UserDetails } from '../types/user';
 import { useAuthStore } from '../store/userStore';
+import { doc, setDoc } from 'firebase/firestore';
 
-export const saveUserData = (user: UserDetails, userId?: string) => {
+export const saveUserData = async (user: UserDetails, userId?: string) => {
   const { setUserDetails } = useAuthStore.getState();
   if (userId) {
-    set(ref(database, 'users/' + userId), {
+    await set(ref(database, 'users/' + userId), {
       email: user.email,
       role: user.role,
       username: user.username,
+    });
+    await setDoc(doc(firestore, 'userEmails', user.email), {
+      uid: userId,
+      email: user.email,
     });
     setUserDetails(user);
   }

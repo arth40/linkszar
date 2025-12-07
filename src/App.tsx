@@ -20,10 +20,12 @@ import Collection from './pages/Collection';
 import Profile from './pages/Profile';
 import Shared from './pages/Shared';
 import MainLayout from './components/MainLayout';
+import { useCollectionStore } from './store/collectionStore';
 
 function App() {
   useViewportHeight();
   const { user } = useAuthStore();
+  const { fetchCollections } = useCollectionStore();
   const { showPrompt, promptToInstall, clearPromptData } =
     usePWAInstallPrompt();
 
@@ -31,6 +33,7 @@ function App() {
     const fetchUserDetails = async () => {
       if (user) {
         await getUserData(user.uid);
+        await fetchCollections(user.uid);
       }
     };
     fetchUserDetails();
