@@ -29,7 +29,6 @@ const ShareCollection: React.FC<{
       await shareCollection(user?.uid!, props.collection, email);
       setIsLoading(false);
       setEmail('');
-      props.close();
     } else {
       toastMessage('success', 'Collection already shared with this email');
     }

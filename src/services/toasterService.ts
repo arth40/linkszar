@@ -6,12 +6,12 @@ const errorOptions: ToastOptions = {
     fontFamily: 'Inter',
     fontSize: '0.8rem',
     fontWeight: 600,
-    background: '#121212',
-    color: 'red',
+    background: '#ffffff',
+    color: '#ef4444',
   },
   iconTheme: {
-    primary: 'red',
-    secondary: '#0f1219',
+    primary: '#ef4444',
+    secondary: '#ffffff',
   },
   duration: 3000,
 };
@@ -21,30 +21,14 @@ const successptions: ToastOptions = {
     fontFamily: 'Inter',
     fontSize: '0.8rem',
     fontWeight: 600,
-    background: '#202020',
-    color: '#00e500',
+    background: '#ffffff',
+    color: '#3fbe7d',
   },
   iconTheme: {
-    primary: '#00e500',
-    secondary: '#0f1219',
+    primary: '#3fbe7d',
+    secondary: '#ffffff',
   },
-  duration: 2000,
-};
-
-const warningOptions: ToastOptions = {
-  style: {
-    fontFamily: 'Inter',
-    fontSize: '0.8rem',
-    fontWeight: 600,
-    background: '#202020',
-    color: '#ffcc00',
-  },
-  iconTheme: {
-    primary: '#ffcc00',
-    secondary: '#0f1219',
-  },
-  duration: 2000,
-  icon: '⚠️',
+  duration: 3000,
 };
 
 const toastMessage = (
@@ -55,8 +39,6 @@ const toastMessage = (
     toast.success(message, successptions);
   } else if (type === 'error') {
     toast.error(message, errorOptions);
-  } else if (type === 'warning') {
-    toast.error(message, warningOptions);
   }
 };
 

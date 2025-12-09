@@ -6,4 +6,5 @@ export interface Collection {
   description?: string;
   ownerId?: string;
   sharedWith?: Record<string, Partial<UserDetails>>;
+  lastActivity?: number;
 }
