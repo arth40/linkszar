@@ -1,4 +1,11 @@
-import { get, push, ref, set, update } from 'firebase/database';
+import {
+  get,
+  push,
+  ref,
+  set,
+  update,
+  serverTimestamp,
+} from 'firebase/database';
 import { database, firestore } from '../firebase';
 import type { Collection } from '../types/collection';
 import { doc, getDoc } from 'firebase/firestore';
@@ -6,7 +13,10 @@ import toastMessage from './toasterService';
 
 export const addNewCollection = (collection: Collection, userId?: string) => {
   if (userId) {
-    push(ref(database, 'collections/' + userId), collection);
+    push(ref(database, 'collections/' + userId), {
+      ...collection,
+      lastActivity: serverTimestamp(),
+    });
   }
 };
 
@@ -62,7 +72,10 @@ export const updateCollection = async (
       database,
       `collections/${userId}/${collectionId}`
     );
-    await update(collectionRef, collection);
+    await update(collectionRef, {
+      ...collection,
+      lastActivity: serverTimestamp(),
+    });
   } catch (error) {
     console.error('Error updating collection:', error);
   }
@@ -73,6 +86,12 @@ export const deleteCollection = async (
   collectionId: string
 ) => {
   try {
+    const linksRef = ref(database, `links/${userId}/${collectionId}`);
+    const collectionLinks = await get(linksRef);
+    if (collectionLinks.exists()) {
+      await moveLinksToDefault(userId, collectionLinks.val());
+    }
+
     const collectionRef = ref(
       database,
       `collections/${userId}/${collectionId}`
@@ -109,7 +128,7 @@ export const shareCollection = async (
       });
     } else {
       console.error('No such user with the provided email!');
-      toastMessage('error', 'No user found with that email');
+      toastMessage('error', 'Email not registered with Linkzar!');
     }
   } catch (error) {
     console.error('Error sharing collection:', error);
@@ -149,5 +168,17 @@ export const getSharedCollections = async (
   } catch (error) {
     console.error('Error getting shared collections:', error);
     return null;
+  }
+};
+
+export const moveLinksToDefault = async (
+  userId: string,
+  collections: Record<string, Collection>
+) => {
+  try {
+    const collectionRef = ref(database, `links/${userId}/default`);
+    await update(collectionRef, collections);
+  } catch (error) {
+    console.error('Error deleting collection:', error);
   }
 };

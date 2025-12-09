@@ -2,12 +2,15 @@ import React from 'react';
 import { Icon } from '@iconify/react';
 import NavbarTooltip from './NavbarTooltip';
 import { useLocation, useNavigate } from 'react-router-dom';
+import CommonModal from '../common/CommonModal';
+import NewLinkForm from '../links/NewLinkForm';
 
 const Navbar: React.FC = () => {
-  // const [activeTab, setActiveTab] = React.useState('/');
   const navigate = useNavigate();
   const location = useLocation();
   const activeTab = location.pathname;
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
   const navigateToPage = (page: string) => {
     navigate(page);
   };
@@ -18,6 +21,7 @@ const Navbar: React.FC = () => {
           <Icon
             icon="icon-park-outline:add-three"
             className="cursor-pointer p-1"
+            onClick={() => setIsModalOpen(true)}
           />
         </NavbarTooltip>
         <NavbarTooltip text="Home">
@@ -49,6 +53,13 @@ const Navbar: React.FC = () => {
           />
         </NavbarTooltip>
       </div>
+      <CommonModal
+        isOpen={isModalOpen}
+        closeModal={() => setIsModalOpen(false)}
+        title="Add new Link"
+      >
+        <NewLinkForm close={() => setIsModalOpen(false)} />
+      </CommonModal>
     </>
   );
 };

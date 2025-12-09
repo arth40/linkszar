@@ -1,6 +1,6 @@
 import React from 'react';
 // import type { ReactNode } from 'react';
-import Navbar from './common/navbar/Navbar';
+import Navbar from './navbar/Navbar';
 import Topbar from './common/Topbar';
 import { Outlet } from 'react-router-dom';
 

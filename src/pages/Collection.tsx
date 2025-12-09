@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ActionBar from '../components/common/ActionBar';
 import { Button } from '@heroui/button';
 import { Icon } from '@iconify/react';
@@ -9,12 +9,21 @@ import CollectionCard from '../components/collection/CollectionCard';
 import CommonLoading from '../components/common/CommonLoading';
 import EditCollectionForm from '../components/collection/EditCollectionForm';
 import ShareCollection from '../components/collection/ShareCollection';
+import CommonConfirmModal from '../components/common/CommonConfirmModal';
+import { useLinkStore } from '../store/linkStore';
 
 const Collection: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [modalTitle, setModalTitle] = React.useState('');
-  const [modalChild, setModalChild] = React.useState<React.ReactNode>(<></>);
-  const { collections, loading } = useCollectionStore();
+  const { collections, loading, deleteCollection } = useCollectionStore();
+  const { deleteAllLinksInCollection } = useLinkStore();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalChild, setModalChild] = useState<React.ReactNode>(<></>);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [confirmModalDesc, setConfirmModalDesc] = useState('');
+  const [confirmModalAction, setConfirmModalAction] = useState<
+    (...args: unknown[]) => unknown
+  >(() => {});
 
   const openNewCollectionModal = () => {
     setModalTitle('Create New Collection');
@@ -47,6 +56,25 @@ const Collection: React.FC = () => {
     );
     setIsModalOpen(true);
   };
+
+  const openDeleteCollectionModal = (collectionId: string) => {
+    const collection = collections ? collections[collectionId] : null;
+    if (!collection) return;
+    setConfirmModalDesc(
+      'This will delete the collection and links will be marked as solo links'
+    );
+    setConfirmModalAction(() => () => deleteCollection(collectionId));
+    setIsConfirmModalOpen(true);
+  };
+
+  const openDeleteAllLinksModal = (collectionId: string) => {
+    const collection = collections ? collections[collectionId] : null;
+    if (!collection) return;
+    setConfirmModalDesc('This will delete all the links in collection.');
+    setConfirmModalAction(() => () => deleteAllLinksInCollection(collectionId));
+    setIsConfirmModalOpen(true);
+  };
+
   return (
     <>
       {loading && (
@@ -86,6 +114,8 @@ const Collection: React.FC = () => {
                 totalLinks={5}
                 editCollection={() => openEditCollectionModal(id)}
                 shareCollection={() => openShareCollectionModal(id)}
+                deleteCollection={() => openDeleteCollectionModal(id)}
+                deleteAllLinks={() => openDeleteAllLinksModal(id)}
               />
             ))}
           </div>
@@ -97,6 +127,13 @@ const Collection: React.FC = () => {
         >
           {modalChild}
         </CommonModal>
+        <CommonConfirmModal
+          title="Are you sure?"
+          description={confirmModalDesc}
+          isOpen={isConfirmModalOpen}
+          confirmAction={confirmModalAction}
+          closeModal={() => setIsConfirmModalOpen(false)}
+        />
       </div>
     </>
   );

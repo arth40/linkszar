@@ -9,6 +9,7 @@ import {
   getSharedCollections,
   getCollectionById,
   revokeSharedAccess as fbRevokeAccess,
+  moveLinksToDefault,
 } from '../services/collectionService';
 import { useAuthStore } from './userStore';
 
@@ -51,9 +52,16 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
       set({ loading: true, error: null });
 
       const data = await getUserCollections(userId);
+      let sortedData;
+      if (data) {
+        sortedData = Object.entries(data).sort(
+          ([, a], [, b]) => b.lastActivity! - a.lastActivity!
+        );
+      }
+      const sortedObject = Object.fromEntries(sortedData!);
 
       set({
-        collections: data || {},
+        collections: sortedObject || {},
         loading: false,
       });
     } catch (err: any) {
@@ -126,7 +134,6 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
       const { user } = useAuthStore.getState();
       const userId = user?.uid;
       if (!userId) return;
-      console.log();
       await fbDelete(userId, collectionId);
 
       // Remove from local state

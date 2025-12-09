@@ -4,7 +4,6 @@ import collectioncover from '../../assets/linkcollection.png';
 import { Icon } from '@iconify/react';
 import { Button } from '@heroui/button';
 import { Tooltip } from '@heroui/react';
-import { useCollectionStore } from '../../store/collectionStore';
 
 interface CollectionCardProps {
   id: string;
@@ -13,10 +12,11 @@ interface CollectionCardProps {
   totalLinks?: number;
   editCollection?: () => void;
   shareCollection?: () => void;
+  deleteCollection?: () => void;
+  deleteAllLinks?: () => void;
 }
 
 const CollectionCard: React.FC<CollectionCardProps> = (props) => {
-  const { deleteCollection } = useCollectionStore();
   return (
     <>
       <Card className="w-full cursor-pointer">
@@ -24,75 +24,70 @@ const CollectionCard: React.FC<CollectionCardProps> = (props) => {
           <img
             src={collectioncover}
             alt="Collection Cover"
-            className="h-20 md:h-24 object-cover"
+            className="h-20 object-cover"
           />
-          <span className="text-lg font-semibold">{props.title}</span>
-          {!['shared'].includes(props.id) && (
-            <p className="cursor-pointer flex gap-2 items-center text-lg">
-              <Icon icon="mdi:link" /> {props?.totalLinks || 0}
-            </p>
-          )}
+          <span className="text-md font-semibold">{props.title}</span>
         </CardHeader>
         <CardBody className="overflow-visible py-2 flex flex-col gap-4 mb-2">
           {!['default', 'shared'].includes(props.id) && (
             <div className="actions flex w-full justify-center gap-4">
-              <Tooltip content="Edit Collection" placement="top">
+              <Tooltip content="Edit collection" placement="top">
                 <Button
                   isIconOnly
                   variant="bordered"
                   size="sm"
-                  className="p-0"
+                  className="p-0 border-warning-100"
                   onPress={props.editCollection}
                 >
                   <Icon
                     icon="tabler:edit"
-                    className="text-xl cursor-pointer text-gray-600"
+                    className="text-xl cursor-pointer text-warning-400"
                   />
                 </Button>
               </Tooltip>
-              <Tooltip content="Share Collection" placement="top">
+              <Tooltip content="Share collection" placement="top">
                 <Button
                   isIconOnly
                   variant="bordered"
                   size="sm"
-                  className="p-0"
+                  className="p-0 border-primary-100"
                   onPress={props.shareCollection}
                 >
                   <Icon
                     icon="fluent:channel-share-48-filled"
-                    className="text-xl cursor-pointer text-gray-600"
+                    className="text-xl cursor-pointer text-primary"
                   />
                 </Button>
               </Tooltip>
-              <Tooltip content="Delete Collection" placement="top">
+              <Tooltip content="Delete collection" placement="top">
                 <Button
                   isIconOnly
                   variant="bordered"
                   size="sm"
-                  className="p-0"
-                  onPress={() => deleteCollection(props.id)}
+                  className="p-0 border-[#ff000030]"
+                  onPress={props.deleteCollection}
                 >
                   <Icon
                     icon="material-symbols:delete-rounded"
-                    className="text-xl cursor-pointer text-gray-600"
+                    className="text-xl cursor-pointer text-[#ff0000bb]"
                   />
                 </Button>
               </Tooltip>
               <Tooltip
-                content="Delete Collection & Links"
+                content="Delete all links"
                 color="danger"
                 placement="top"
               >
                 <Button
                   isIconOnly
-                  variant="flat"
-                  color="danger"
+                  variant="bordered"
                   size="sm"
-                  className="p-0"
+                  className="p-0 border-[#ff000030]"
+                  onPress={props.deleteAllLinks}
                 >
                   <Icon
                     icon="fe:delete-link"
-                    className="text-xl cursor-pointer text-danger"
+                    className="text-xl cursor-pointer text-[#ff0000bb]"
                   />
                 </Button>
               </Tooltip>
