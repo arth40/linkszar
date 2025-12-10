@@ -11,6 +11,7 @@ import { Image } from '@heroui/image';
 interface LinkListCardProps {
   link: Link;
   view: 'list' | 'thumbnail';
+  page: 'collection' | 'shared';
 }
 
 const LinkListCard: React.FC<LinkListCardProps> = (props) => {
@@ -63,7 +64,7 @@ const LinkListCard: React.FC<LinkListCardProps> = (props) => {
           {props.view === 'list' && (
             <Icon
               icon="material-symbols:link-rounded"
-              className="text-4xl cursor-pointer text-primary"
+              className="text-4xl cursor-pointer text-primary-800"
             />
           )}
           <div className="flex w-full">
@@ -82,24 +83,26 @@ const LinkListCard: React.FC<LinkListCardProps> = (props) => {
                 >
                   <Icon
                     icon="solar:copy-bold-duotone"
-                    className="text-xl cursor-pointer text-primary"
+                    className="text-xl cursor-pointer text-primary-800"
                   />
                 </Button>
               </Tooltip>
-              <Tooltip content="Delete Link" placement="top">
-                <Button
-                  isIconOnly
-                  variant="bordered"
-                  size="sm"
-                  className="p-0"
-                  onPress={() => handleDeleteLink()}
-                >
-                  <Icon
-                    icon="material-symbols:delete-rounded"
-                    className="text-xl cursor-pointer text-[#ff0000bb]"
-                  />
-                </Button>
-              </Tooltip>
+              {props.page === 'collection' && (
+                <Tooltip content="Delete Link" placement="top">
+                  <Button
+                    isIconOnly
+                    variant="bordered"
+                    size="sm"
+                    className="p-0"
+                    onPress={() => handleDeleteLink()}
+                  >
+                    <Icon
+                      icon="material-symbols:delete-rounded"
+                      className="text-xl cursor-pointer text-[#990000]"
+                    />
+                  </Button>
+                </Tooltip>
+              )}
             </div>
           </div>
         </CardBody>

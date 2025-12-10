@@ -27,28 +27,28 @@ const Navbar: React.FC = () => {
         <NavbarTooltip text="Home">
           <Icon
             icon="fluent-emoji-high-contrast:link"
-            className={`${activeTab === '/' ? 'text-primary' : ''} cursor-pointer p-1`}
+            className={`${activeTab === '/' ? 'text-primary-600' : ''} cursor-pointer p-1`}
             onClick={() => navigateToPage('/')}
           />
         </NavbarTooltip>
         <NavbarTooltip text="Collection">
           <Icon
             icon="fluent:collections-empty-24-regular"
-            className={`${activeTab === '/collection' ? 'text-primary' : ''} cursor-pointer p-1`}
+            className={`${activeTab === '/collection' ? 'text-primary-600' : ''} cursor-pointer p-1`}
             onClick={() => navigateToPage('/collection')}
           />
         </NavbarTooltip>
         <NavbarTooltip text="Shared with me">
           <Icon
             icon="hugeicons:user-group"
-            className={`${activeTab === '/shared' ? 'text-primary' : ''} cursor-pointer p-1`}
+            className={`${activeTab === '/shared' ? 'text-primary-600' : ''} cursor-pointer p-1`}
             onClick={() => navigateToPage('/shared')}
           />
         </NavbarTooltip>
         <NavbarTooltip text="Profile">
           <Icon
             icon="solar:user-outline"
-            className={`${activeTab === '/profile' ? 'text-primary' : ''} cursor-pointer p-1`}
+            className={`${activeTab === '/profile' ? 'text-primary-600' : ''} cursor-pointer p-1`}
             onClick={() => navigateToPage('/profile')}
           />
         </NavbarTooltip>

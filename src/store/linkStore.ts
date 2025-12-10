@@ -13,6 +13,7 @@ import { useCollectionStore } from './collectionStore';
 
 type LinkState = {
   links: Record<string, Record<string, Link>>;
+  sharedLinks: Record<string, Link>;
   loading: boolean;
   error: string | null;
 
@@ -22,11 +23,17 @@ type LinkState = {
   deleteLink: (link: Link) => Promise<void>;
   clearLinks: () => void;
   getAllLinks: () => Record<string, Link>;
+  getCollectionLinks: (collectionId: string) => Record<string, Link>;
   deleteAllLinksInCollection: (collectionId: string) => void;
+  fetchSharedConnectionLinks: (
+    ownerId: string,
+    collectionId: string
+  ) => Promise<void>;
 };
 
 export const useLinkStore = create<LinkState>((set, get) => ({
   links: {},
+  sharedLinks: {},
   loading: false,
   error: null,
 
@@ -67,6 +74,7 @@ export const useLinkStore = create<LinkState>((set, get) => ({
             ...state.links,
             [collectionId]: data!,
           },
+          loading: false,
         };
       });
     } catch (err: any) {
@@ -131,20 +139,49 @@ export const useLinkStore = create<LinkState>((set, get) => ({
 
     const all: Record<string, Link> = {};
 
-    Object.entries(links).forEach(([collectionId, linkGroup]) => {
-      Object.entries(linkGroup).forEach(([linkId, linkData]) => {
-        all[linkId] = {
-          ...linkData,
-          id: linkId,
-          collectionId,
-          collectionName: collections[collectionId]?.name || '(solo link)',
-        };
+    if (links) {
+      Object.entries(links).forEach(([collectionId, linkGroup]) => {
+        Object.entries(linkGroup).forEach(([linkId, linkData]) => {
+          all[linkId] = {
+            ...linkData,
+            id: linkId,
+            collectionId,
+            collectionName: collections[collectionId]?.name || '(solo link)',
+          };
+        });
       });
-    });
+    }
 
     let sortedData;
     if (all) {
       sortedData = Object.entries(all).sort(
+        ([, a], [, b]) => b.createdAt! - a.createdAt!
+      );
+    }
+    const sortedDataObject = Object.fromEntries(sortedData!);
+    set({ loading: false });
+    return sortedDataObject;
+  },
+
+  getCollectionLinks: (collectionId) => {
+    set({ loading: true, error: null });
+    const { links } = get();
+
+    const collectionLinks: Record<string, Link> = {};
+
+    if (links[collectionId]) {
+      Object.entries(links[collectionId]).forEach(([linkId, linkData]) => {
+        collectionLinks[linkId] = {
+          ...linkData,
+          id: linkId,
+          collectionId,
+        };
+      });
+    }
+
+    let sortedData;
+    if (collectionLinks) {
+      sortedData = Object.entries(collectionLinks).sort(
         ([, a], [, b]) => b.createdAt! - a.createdAt!
       );
     }
@@ -174,6 +211,42 @@ export const useLinkStore = create<LinkState>((set, get) => ({
       });
     } catch (err: any) {
       set({ error: err.message || 'Failed to delete link' });
+    }
+  },
+
+  fetchSharedConnectionLinks: async (userId: string, collectionId: string) => {
+    try {
+      set({ loading: true, error: null });
+
+      const data = await getCollectionLinks(userId, collectionId);
+
+      if (data) {
+        Object.entries(data).forEach(([linkId, linkData]) => {
+          data[linkId] = {
+            ...linkData,
+            id: linkId,
+            collectionId,
+          };
+        });
+      }
+      let sortedData;
+      if (data) {
+        sortedData = Object.entries(data).sort(
+          ([, a], [, b]) => b.createdAt! - a.createdAt!
+        );
+      }
+      const sortedDataObject = Object.fromEntries(sortedData!);
+
+      set({
+        sharedLinks:
+          (sortedDataObject as unknown as Record<string, Link>) || {},
+        loading: false,
+      });
+    } catch (err: any) {
+      set({
+        error: err.message || 'Failed to load links',
+        loading: false,
+      });
     }
   },
 }));

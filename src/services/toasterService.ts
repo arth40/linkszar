@@ -7,10 +7,10 @@ const errorOptions: ToastOptions = {
     fontSize: '0.8rem',
     fontWeight: 600,
     background: '#ffffff',
-    color: '#ef4444',
+    color: '#990000',
   },
   iconTheme: {
-    primary: '#ef4444',
+    primary: '#990000',
     secondary: '#ffffff',
   },
   duration: 3000,
@@ -22,19 +22,16 @@ const successptions: ToastOptions = {
     fontSize: '0.8rem',
     fontWeight: 600,
     background: '#ffffff',
-    color: '#3fbe7d',
+    color: '#0d5231',
   },
   iconTheme: {
-    primary: '#3fbe7d',
+    primary: '#0d5231',
     secondary: '#ffffff',
   },
   duration: 3000,
 };
 
-const toastMessage = (
-  type: 'success' | 'error' | 'warning',
-  message: string
-) => {
+const toastMessage = (type: 'success' | 'error', message: string) => {
   if (type === 'success') {
     toast.success(message, successptions);
   } else if (type === 'error') {

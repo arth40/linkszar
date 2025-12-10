@@ -16,16 +16,17 @@ import { usePWAInstallPrompt } from './hooks/PWAInstallHook';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
-import Collection from './pages/Collection';
+import Collection from './pages/collection/Collection';
 import Profile from './pages/Profile';
 import Shared from './pages/Shared';
 import MainLayout from './components/MainLayout';
 import { useCollectionStore } from './store/collectionStore';
+import CollectionLinks from './pages/collection/CollectionLinks';
 
 function App() {
   useViewportHeight();
   const { user } = useAuthStore();
-  const { fetchCollections } = useCollectionStore();
+  const { fetchCollections, fetchSharedCollections } = useCollectionStore();
   const { showPrompt, promptToInstall, clearPromptData } =
     usePWAInstallPrompt();
 
@@ -34,6 +35,7 @@ function App() {
       if (user) {
         await getUserData(user.uid);
         await fetchCollections(user.uid);
+        await fetchSharedCollections();
       }
     };
     fetchUserDetails();
@@ -81,6 +83,14 @@ function App() {
             }
           />
           <Route
+            path="/collection/:id"
+            element={
+              <ProtectedRoute>
+                <CollectionLinks page="collection" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/profile"
             element={
               <ProtectedRoute>
@@ -93,6 +103,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Shared />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/shared/:ownerId/:id"
+            element={
+              <ProtectedRoute>
+                <CollectionLinks page="shared" />
               </ProtectedRoute>
             }
           />

@@ -9,7 +9,7 @@ import {
   getSharedCollections,
   getCollectionById,
   revokeSharedAccess as fbRevokeAccess,
-  moveLinksToDefault,
+  deleteSharedCollection as fbDeleteShared,
 } from '../services/collectionService';
 import { useAuthStore } from './userStore';
 
@@ -38,6 +38,7 @@ type CollectionState = {
     collectionId: string,
     accessId: string
   ) => Promise<void>;
+  deleteSharedCollection: (collectionId: string) => Promise<void>;
 };
 
 export const useCollectionStore = create<CollectionState>((set, get) => ({
@@ -180,5 +181,23 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
         [collectionId]: { ...updatedData! },
       },
     }));
+  },
+
+  deleteSharedCollection: async (collectionId: string) => {
+    try {
+      const { user } = useAuthStore.getState();
+      const userId = user?.uid;
+      if (!userId) return;
+      await fbDeleteShared(userId, collectionId);
+
+      // Remove from local state
+      set((state) => {
+        const updated = { ...state.sharedCollections };
+        delete updated[collectionId];
+        return { sharedCollections: updated };
+      });
+    } catch (err: any) {
+      set({ error: err.message });
+    }
   },
 }));
