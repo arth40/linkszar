@@ -4,12 +4,14 @@ import collectioncover from '../../assets/linkcollection.png';
 import { Icon } from '@iconify/react';
 import { Button } from '@heroui/button';
 import { Tooltip } from '@heroui/react';
+import { useNavigate } from 'react-router-dom';
 
 interface CollectionCardProps {
   id: string;
   title: string;
-  description?: string;
+  ownerId?: string;
   totalLinks?: number;
+  page: 'collection' | 'shared';
   editCollection?: () => void;
   shareCollection?: () => void;
   deleteCollection?: () => void;
@@ -17,31 +19,47 @@ interface CollectionCardProps {
 }
 
 const CollectionCard: React.FC<CollectionCardProps> = (props) => {
+  const navigate = useNavigate();
+
+  const viewCollectionLinks = () => {
+    if (props.page === 'collection') {
+      navigate(`/collection/${props.id}`);
+    } else {
+      navigate(`/shared/${props.ownerId}/${props.id}`);
+    }
+  };
+
   return (
     <>
       <Card className="w-full cursor-pointer">
-        <CardHeader className="pb-0 pt-2 px-4 flex-col">
+        <CardHeader
+          className="pb-0 pt-2 px-4 flex-col"
+          onClick={() => viewCollectionLinks()}
+        >
           <img
             src={collectioncover}
             alt="Collection Cover"
-            className="h-20 object-cover"
+            className="size-20 object-cover"
           />
           <span className="text-md font-semibold">{props.title}</span>
         </CardHeader>
-        <CardBody className="overflow-visible py-2 flex flex-col gap-4 mb-2">
-          {!['default', 'shared'].includes(props.id) && (
+        <CardBody
+          className="overflow-visible py-2 flex flex-col gap-4 mb-2"
+          onClick={() => viewCollectionLinks()}
+        >
+          {!['default'].includes(props.id) && props.page === 'collection' && (
             <div className="actions flex w-full justify-center gap-4">
               <Tooltip content="Edit collection" placement="top">
                 <Button
                   isIconOnly
                   variant="bordered"
                   size="sm"
-                  className="p-0 border-warning-100"
+                  className="p-0"
                   onPress={props.editCollection}
                 >
                   <Icon
                     icon="tabler:edit"
-                    className="text-xl cursor-pointer text-warning-400"
+                    className="text-xl cursor-pointer text-[#cc9900]"
                   />
                 </Button>
               </Tooltip>
@@ -50,12 +68,12 @@ const CollectionCard: React.FC<CollectionCardProps> = (props) => {
                   isIconOnly
                   variant="bordered"
                   size="sm"
-                  className="p-0 border-primary-100"
+                  className="p-0"
                   onPress={props.shareCollection}
                 >
                   <Icon
                     icon="fluent:channel-share-48-filled"
-                    className="text-xl cursor-pointer text-primary"
+                    className="text-xl cursor-pointer text-primary-900"
                   />
                 </Button>
               </Tooltip>
@@ -64,12 +82,12 @@ const CollectionCard: React.FC<CollectionCardProps> = (props) => {
                   isIconOnly
                   variant="bordered"
                   size="sm"
-                  className="p-0 border-[#ff000030]"
+                  className="p-0"
                   onPress={props.deleteCollection}
                 >
                   <Icon
                     icon="material-symbols:delete-rounded"
-                    className="text-xl cursor-pointer text-[#ff0000bb]"
+                    className="text-xl cursor-pointer text-[#990000]"
                   />
                 </Button>
               </Tooltip>
@@ -82,12 +100,12 @@ const CollectionCard: React.FC<CollectionCardProps> = (props) => {
                   isIconOnly
                   variant="bordered"
                   size="sm"
-                  className="p-0 border-[#ff000030]"
+                  className="p-0"
                   onPress={props.deleteAllLinks}
                 >
                   <Icon
                     icon="fe:delete-link"
-                    className="text-xl cursor-pointer text-[#ff0000bb]"
+                    className="text-xl cursor-pointer text-[#990000]"
                   />
                 </Button>
               </Tooltip>

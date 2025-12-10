@@ -31,7 +31,7 @@ export const getUserCollections = async (
       const collectionData = snapshot.val() as Record<string, Collection>;
       return collectionData;
     } else {
-      console.warn('No user data found.');
+      console.warn('No collection data found.');
       return null;
     }
   } catch (error) {
@@ -125,6 +125,7 @@ export const shareCollection = async (
         id: collectionData.id,
         name: collectionData.name,
         ownerId: ownerId,
+        sharedAt: serverTimestamp(),
       });
     } else {
       console.error('No such user with the provided email!');
@@ -178,6 +179,21 @@ export const moveLinksToDefault = async (
   try {
     const collectionRef = ref(database, `links/${userId}/default`);
     await update(collectionRef, collections);
+  } catch (error) {
+    console.error('Error deleting collection:', error);
+  }
+};
+
+export const deleteSharedCollection = async (
+  userId: string = '',
+  collectionId: string
+) => {
+  try {
+    const collectionRef = ref(
+      database,
+      `sharedCollection/${userId}/${collectionId}`
+    );
+    await set(collectionRef, null);
   } catch (error) {
     console.error('Error deleting collection:', error);
   }

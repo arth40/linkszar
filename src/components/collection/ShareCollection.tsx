@@ -1,6 +1,6 @@
 import { Input } from '@heroui/input';
 import { Button } from '@heroui/button';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import type { Collection } from '../../types/collection';
 import { useCollectionStore } from '../../store/collectionStore';
 import { useAuthStore } from '../../store/userStore';
@@ -9,24 +9,34 @@ import { Icon } from '@iconify/react';
 import CommonLoading from '../common/CommonLoading';
 
 const ShareCollection: React.FC<{
-  collection: Collection;
+  collectionId: string;
   close: () => void;
 }> = (props) => {
   const [email, setEmail] = React.useState('');
   const [deleted, setDeleted] = React.useState<string[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
-  const { shareCollection, revokeSharedAccess } = useCollectionStore();
+  const [collection, setCollection] = useState<Collection | null>(null);
+  const { shareCollection, revokeSharedAccess, collections } =
+    useCollectionStore();
   const { user } = useAuthStore();
+
+  useEffect(() => {
+    if (collections[props.collectionId]) {
+      setCollection(collections[props.collectionId]);
+    }
+  }, [collections]);
 
   const handleShareCollection = async () => {
     if (
-      !props.collection.sharedWith ||
-      !Object.values(props.collection.sharedWith).some(
-        (user) => user.email === email
-      )
+      !collection?.sharedWith ||
+      !Object.values(collection.sharedWith).some((user) => user.email === email)
     ) {
       setIsLoading(true);
-      await shareCollection(user?.uid!, props.collection, email);
+      await shareCollection(
+        user?.uid!,
+        { ...collection!, id: props.collectionId },
+        email
+      );
       setIsLoading(false);
       setEmail('');
     } else {
@@ -35,11 +45,12 @@ const ShareCollection: React.FC<{
   };
 
   const handleRevokeAccess = async (key: string) => {
-    await revokeSharedAccess(user?.uid!, props.collection.id!, key);
-    if (props.collection?.sharedWith) {
+    await revokeSharedAccess(user?.uid!, props.collectionId, key);
+    if (collection?.sharedWith!) {
       setDeleted([...deleted, key]);
     }
   };
+
   return (
     <>
       {isLoading && (
@@ -64,31 +75,32 @@ const ShareCollection: React.FC<{
             </Button>
           </div>
           <div className="flex flex-col">
-            {props.collection.sharedWith && (
+            {collection?.sharedWith && (
               <>
                 <h3 className="font-semibold mt-4 mb-2">Shared With</h3>
-                {Object.entries(props.collection.sharedWith).map(
-                  ([key, user]) => (
-                    <>
-                      {!deleted.includes(key) && (
-                        <div className="flex items-center justify-between">
-                          <span key={key}>{user.email}</span>
-                          <Button
-                            isIconOnly
-                            variant="light"
-                            className=""
-                            onPress={() => handleRevokeAccess(key)}
-                          >
-                            <Icon
-                              icon="material-symbols:delete-rounded"
-                              className="text-xl cursor-pointer"
-                            />
-                          </Button>
-                        </div>
-                      )}
-                    </>
-                  )
-                )}
+                {Object.entries(collection.sharedWith).map(([key, user]) => (
+                  <div key={key}>
+                    {!deleted.includes(key) && (
+                      <div
+                        className="flex items-center justify-between"
+                        key={user.uid}
+                      >
+                        <span>{user.email}</span>
+                        <Button
+                          isIconOnly
+                          variant="light"
+                          className=""
+                          onPress={() => handleRevokeAccess(key)}
+                        >
+                          <Icon
+                            icon="material-symbols:delete-rounded"
+                            className="text-xl cursor-pointer"
+                          />
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                ))}
               </>
             )}
           </div>
