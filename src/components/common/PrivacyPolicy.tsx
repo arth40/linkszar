@@ -120,6 +120,7 @@ const PrivacyPolicy: React.FC = () => {
       <h2 className="text-xl font-semibold mt-6 mb-2">9. Contact Us</h2>
       <p>
         For privacy questions, contact us at:
+        <br />
         <strong>support@linkszar.com</strong>
       </p>
     </div>

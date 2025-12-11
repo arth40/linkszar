@@ -5,6 +5,7 @@ import { HeroUIProvider } from '@heroui/system';
 import { ToastProvider } from '@heroui/toast';
 import './tailwinds.css';
 import './index.scss';
+import './styles/scrollbar.scss';
 import App from './App.tsx';
 import { HelmetProvider } from 'react-helmet-async';
 

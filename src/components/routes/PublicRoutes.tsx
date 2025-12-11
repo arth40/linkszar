@@ -1,7 +1,7 @@
 // src/components/PublicRoute.tsx
 import { Spinner } from '@heroui/spinner';
 import { useAuthStore } from '../../store/userStore';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 interface PublicRouteProps {
   children: React.ReactNode;
@@ -12,6 +12,7 @@ export const PublicRoute = ({
   children,
   redirectTo = '/',
 }: PublicRouteProps) => {
+  const location = useLocation();
   const { user, initialized } = useAuthStore();
 
   if (!initialized) {
@@ -24,7 +25,7 @@ export const PublicRoute = ({
     );
   }
 
-  if (user) {
+  if (user && ['/register', '/login'].includes(location.pathname)) {
     return <Navigate to={redirectTo} replace />;
   }
 

@@ -10,14 +10,23 @@ import { updateUserName } from '../services/userService';
 import CommonModal from '../components/common/CommonModal';
 import PrivacyPolicy from '../components/common/PrivacyPolicy';
 import TermsOfService from '../components/common/TermsOfService';
+import { useNavigate } from 'react-router-dom';
 
 const Profile: React.FC = () => {
+  const navigate = useNavigate();
+  const { user, userDetails, logout } = useAuthStore();
+
   const [isEdit, setIsEdit] = React.useState(false);
   const [username, setUsername] = React.useState('');
   const [modalTitle, setModalTitle] = React.useState('');
   const [modalchild, setModalChild] = React.useState<React.ReactNode>(<></>);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const { user, userDetails, logout } = useAuthStore();
+
+  useEffect(() => {
+    if (userDetails?.username) {
+      setUsername(userDetails.username);
+    }
+  }, [userDetails]);
 
   const openPrivacyModal = () => {
     setModalTitle('Privacy Policy');
@@ -36,15 +45,17 @@ const Profile: React.FC = () => {
     setIsEdit(!isEdit);
   };
 
-  useEffect(() => {
-    if (userDetails?.username) {
-      setUsername(userDetails.username);
-    }
-  }, [userDetails]);
-
   return (
     <>
-      <div className="flex w-full h-full items-center pb-20 justify-center  ">
+      <div className="flex flex-col w-full h-full items-center pb-20 justify-center gap-4">
+        <Button
+          variant="flat"
+          className="flex items-center text-primary-900"
+          onPress={() => navigate('/portfolio')}
+        >
+          <Icon icon="mi:switch" className="text-2xl" />
+          <p>Switch to Portfolio</p>
+        </Button>
         <Card className="py-4 w-80">
           <CardHeader className="pb-0 pt-2 px-4 flex-col">
             <Image
@@ -113,14 +124,14 @@ const Profile: React.FC = () => {
                 Terms of Service
               </p>
             </div>
-            <CommonModal
-              isOpen={isModalOpen}
-              title={modalTitle}
-              children={modalchild}
-              closeModal={() => setIsModalOpen(false)}
-            ></CommonModal>
           </CardBody>
         </Card>
+        <CommonModal
+          isOpen={isModalOpen}
+          title={modalTitle}
+          children={modalchild}
+          closeModal={() => setIsModalOpen(false)}
+        ></CommonModal>
       </div>
     </>
   );
