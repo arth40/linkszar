@@ -22,6 +22,8 @@ import Shared from './pages/Shared';
 import MainLayout from './components/MainLayout';
 import { useCollectionStore } from './store/collectionStore';
 import CollectionLinks from './pages/collection/CollectionLinks';
+import Portfolio from './pages/portfolio/Portfolio';
+import PortfolioPreview from './pages/portfolio/PortfolioPreview';
 
 function App() {
   useViewportHeight();
@@ -99,6 +101,14 @@ function App() {
             }
           />
           <Route
+            path="/portfolio"
+            element={
+              <ProtectedRoute>
+                <Portfolio />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/shared"
             element={
               <ProtectedRoute>
@@ -128,6 +138,14 @@ function App() {
           element={
             <PublicRoute>
               <Register />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/portfolio/:id"
+          element={
+            <PublicRoute>
+              <PortfolioPreview />
             </PublicRoute>
           }
         />
