@@ -6,7 +6,7 @@ Disallow: /
 Allow: /login
 Allow: /register
 Allow: /about
-Allow: /porfolio/
+Allow: /portfolio/
 Allow: /favicon.ico
 Allow: /favicon.svg
 Allow: /favicon-32x32.png
