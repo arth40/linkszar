@@ -16,7 +16,7 @@ const Navbar: React.FC = () => {
   };
   return (
     <>
-      <div className="navbar bg-white w-screen md:w-16 h-16 md:h-screen fixed left-0 bottom-0 md:top-0 border-primary-50 border-t-2 md:border-r-2 md:border-t-0 flex md:flex-col items-center justify-evenly md:justify-start md:pt-18 gap-7 text-4xl md:text-[34px] text-primary-900 z-50">
+      <div className="navbar bg-white w-screen md:w-16 h-16 md:h-screen fixed left-0 bottom-0 md:top-0 border-primary-50 border-t-2 md:border-r-2 md:border-t-0 flex md:flex-col items-center justify-evenly md:justify-start md:pt-18 gap-7 text-4xl md:text-[34px] text-primary-900">
         <NavbarTooltip text="Add New">
           <Icon
             icon="icon-park-outline:add-three"

@@ -59,10 +59,10 @@ const PortfolioPreview: React.FC = () => {
                   className="text-2xl cursor-pointer"
                 />
               </Button>
-              <h1 className="text-4xl font-bold px-5 pr-10">
+              <h1 className="text-4xl font-bold px-5 mr-12 break-all">
                 {portfolio.name}
               </h1>
-              <div className="overflow-y-auto">
+              <div className="flex flex-col w-full overflow-y-auto">
                 {portfolio.about && (
                   <div className="flex mx-2 border-2 border-primary-100 rounded-lg p-4">
                     <p>{portfolio.about}</p>
