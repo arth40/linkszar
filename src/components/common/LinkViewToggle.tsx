@@ -1,6 +1,6 @@
 import { Tab, Tabs } from '@heroui/tabs';
 import { Icon } from '@iconify/react';
-import React, { type Key } from 'react';
+import React from 'react';
 
 const LinkViewToggle: React.FC<{
   toggleView: (key: 'list' | 'thumbnail') => void;

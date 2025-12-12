@@ -18,7 +18,7 @@ export default defineConfig({
         name: 'Linkszar',
         short_name: 'linkszar',
         description: 'Linkszar PWA',
-        theme_color: '#9823C2',
+        theme_color: '#083b23',
         icons: [
           {
             src: 'pwa-192x192.png',

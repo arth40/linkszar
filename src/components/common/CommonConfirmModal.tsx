@@ -52,7 +52,7 @@ const CommonConfirmModal: React.FC<CommonConfirmModalProps> = (props) => {
         closeButton={false}
       >
         <ModalContent>
-          {(onClose) => (
+          {() => (
             <>
               <ModalHeader className="flex flex-col gap-1">
                 {props.title}

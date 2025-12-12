@@ -16,7 +16,7 @@ const MainLayout: React.FC = () => {
       <Topbar />
       <Navbar />
       <main
-        className={`fixed p-4 top-16 md:left-12 w-full md:w-[calc(100vw-2rem)] ${adExcluded() ? 'lg:w-[calc(100vw-8rem)]' : 'lg:w-[calc(100vw-20rem)'} ${adExcluded() ? 'h-[calc(var(--vh)*100-8rem)]' : 'h-[calc(var(--vh)*100-14rem)]'} md:h-[calc(var(--vh)*100-9rem)] lg:h-[calc(var(--vh)*100-4rem)]`}
+        className={`fixed p-4 top-16 md:left-12 w-full md:w-[calc(100vw-2rem)] ${!adExcluded() ? 'lg:w-[calc(100vw-20rem)]' : 'lg:w-[calc(100vw-8rem)]'} ${adExcluded() ? 'h-[calc(var(--vh)*100-8rem)]' : 'h-[calc(var(--vh)*100-14rem)]'} md:h-[calc(var(--vh)*100-9rem)] lg:h-[calc(var(--vh)*100-4rem)]`}
       >
         <Outlet />
       </main>
