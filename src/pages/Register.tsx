@@ -51,8 +51,8 @@ const Register: React.FC = () => {
   }, [password]);
 
   const handleUsernameChange = (value: string) => {
-    const worldAlphaNumRegex = /^[\p{L}\p{N} ]$/u;
-    if (worldAlphaNumRegex.test(value[value.length - 1])) {
+    const worldAlphaNumRegex = /^[\p{L} ]$/u;
+    if (!value || worldAlphaNumRegex.test(value[value.length - 1])) {
       setUsername(value);
     }
     setIsValid(value.length <= 40);
@@ -109,11 +109,11 @@ const Register: React.FC = () => {
             />
             <Input
               isRequired
-              label="Username"
+              label="Name"
               labelPlacement="outside"
               name="username"
               value={username}
-              placeholder="Enter your username"
+              placeholder="Enter your Name"
               type="text"
               isInvalid={username.length > 40}
               onValueChange={handleUsernameChange}

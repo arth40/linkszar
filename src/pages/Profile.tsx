@@ -82,7 +82,7 @@ const Profile: React.FC = () => {
             <Input
               readOnly={!isEdit}
               labelPlacement="outside"
-              label="Username"
+              label="Name"
               name="username"
               type="text"
               variant="faded"
