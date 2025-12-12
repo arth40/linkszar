@@ -3,8 +3,9 @@ import { Card, CardBody, CardHeader } from '@heroui/card';
 import collectioncover from '../../assets/linkcollection.png';
 import { Icon } from '@iconify/react';
 import { Button } from '@heroui/button';
-import { Tooltip } from '@heroui/react';
+import { Tooltip } from '@heroui/tooltip';
 import { useNavigate } from 'react-router-dom';
+import { Image } from '@heroui/image';
 
 interface CollectionCardProps {
   id: string;
@@ -36,12 +37,12 @@ const CollectionCard: React.FC<CollectionCardProps> = (props) => {
           className="pb-0 pt-2 px-4 flex-col"
           onClick={() => viewCollectionLinks()}
         >
-          <img
+          <Image
             src={collectioncover}
             alt="Collection Cover"
-            className="size-20 object-cover"
+            className="size-28 object-cover"
           />
-          <span className="text-md font-semibold">{props.title}</span>
+          <span className="text-md font-semibold break-all">{props.title}</span>
         </CardHeader>
         <CardBody
           className="overflow-visible py-2 flex flex-col gap-4 mb-2"

@@ -141,14 +141,16 @@ export const useLinkStore = create<LinkState>((set, get) => ({
 
     if (links) {
       Object.entries(links).forEach(([collectionId, linkGroup]) => {
-        Object.entries(linkGroup).forEach(([linkId, linkData]) => {
-          all[linkId] = {
-            ...linkData,
-            id: linkId,
-            collectionId,
-            collectionName: collections[collectionId]?.name || '(solo link)',
-          };
-        });
+        if (linkGroup) {
+          Object.entries(linkGroup).forEach(([linkId, linkData]) => {
+            all[linkId] = {
+              ...linkData,
+              id: linkId,
+              collectionId,
+              collectionName: collections[collectionId]?.name || '(solo link)',
+            };
+          });
+        }
       });
     }
 

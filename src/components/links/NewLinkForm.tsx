@@ -17,6 +17,7 @@ const NewLinkForm: React.FC<{ close: () => void }> = (props) => {
   };
 
   const handleAddLink = async () => {
+    if (placeholder.length > 40 || !collection) return;
     const linkData = {
       url: link,
       placeholder,
@@ -43,6 +44,8 @@ const NewLinkForm: React.FC<{ close: () => void }> = (props) => {
           labelPlacement="outside"
           value={placeholder}
           onValueChange={setPlaceholder}
+          isInvalid={placeholder.length > 40}
+          errorMessage="Max. length 40"
         />
         <Autocomplete
           isRequired

@@ -57,8 +57,14 @@ const Portfolio: React.FC = () => {
   };
 
   const syncPortfolio = async () => {
-    if (links.length >= 6) {
-      setLinks(links.slice(0, 6));
+    if (!links[links.length - 1].details || !links[links.length - 1].url) {
+      toastMessage('error', 'Please complete the details');
+    }
+    if (links.length >= 8) {
+      setLinks(links.slice(0, 8));
+    }
+    if (about.length > 800 || links.some((link) => link.details.length > 60)) {
+      return;
     }
     const porfolio = {
       name: userDetails?.username || '',
@@ -67,6 +73,7 @@ const Portfolio: React.FC = () => {
     };
     await createOrUpdatePortoflio(porfolio, user?.uid);
     await fetchPortfolio();
+    toastMessage('success', 'Changes synced');
   };
 
   const viewPortfolio = () => {
@@ -104,12 +111,14 @@ const Portfolio: React.FC = () => {
           <CardHeader className="pb-0 pt-2 px-4 flex-col mb-4">
             <p className="text-xl font-semibold">Edit Portfolio</p>
           </CardHeader>
-          <CardBody className="overflow-visible py-2 flex flex-col gap-4 h-100 overflow-y-auto">
+          <CardBody className="py-2 flex flex-col gap-4 h-80 md:h-100 overflow-y-auto">
             <Textarea
               label="About You"
               placeholder="Who are you?"
               value={about}
               onValueChange={setAbout}
+              isInvalid={about.length > 800}
+              errorMessage="Max. length 800"
             />
             {links.map((link, index) => (
               <div
@@ -141,6 +150,8 @@ const Portfolio: React.FC = () => {
                       />
                     </Button>
                   }
+                  isInvalid={link.details.length > 60}
+                  errorMessage="Max. length 60"
                 />
                 <Input
                   name="link"
@@ -157,7 +168,7 @@ const Portfolio: React.FC = () => {
           </CardBody>
           <CardFooter className="flex flex-col items-center px-4">
             <div className="w-full flex justify-evenly pb-4">
-              {links && links.length < 6 && (
+              {links && links.length < 8 && (
                 <Button
                   variant="bordered"
                   onPress={() => addNewLink()}

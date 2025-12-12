@@ -11,6 +11,7 @@ import CommonModal from '../components/common/CommonModal';
 import PrivacyPolicy from '../components/common/PrivacyPolicy';
 import TermsOfService from '../components/common/TermsOfService';
 import { useNavigate } from 'react-router-dom';
+import { Link } from '@heroui/link';
 
 const Profile: React.FC = () => {
   const navigate = useNavigate();
@@ -116,6 +117,12 @@ const Profile: React.FC = () => {
             >
               Log out
             </Button>
+            <Link
+              href="mailto:contact@linkszar.com"
+              className="w-full flex justify-center bg-primary-900 p-2 text-gray-100 rounded-medium"
+            >
+              <p className="text-sm text-center">contact@linkszar.com</p>
+            </Link>
             <div className="flex justify-evenly mt-2 text-sm text-default-400">
               <p className="cursor-pointer" onClick={openPrivacyModal}>
                 Privacy Policy

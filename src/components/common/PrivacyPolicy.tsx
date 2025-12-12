@@ -121,7 +121,7 @@ const PrivacyPolicy: React.FC = () => {
       <p>
         For privacy questions, contact us at:
         <br />
-        <strong>support@linkszar.com</strong>
+        <strong>contact@linkszar.com</strong>
       </p>
     </div>
   );

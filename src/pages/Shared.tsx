@@ -34,7 +34,7 @@ const Shared: React.FC = () => {
                 }
               />
             )}
-            <div className="grid p-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 w-full">
+            <div className="grid p-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 w-full">
               {Object.entries(sharedCollections).map(([id, collection]) => (
                 <CollectionCard
                   key={id}
