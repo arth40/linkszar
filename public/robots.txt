@@ -1,13 +1,15 @@
 # robots.txt for React + Vite app
 
 User-agent: *
-Allow: /login$
-Allow: /register$
-Allow: /about$
+Disallow: /
+
+Allow: /login
+Allow: /register
+Allow: /about
+Allow: /porfolio/
 Allow: /favicon.ico
 Allow: /favicon.svg
 Allow: /favicon-32x32.png
-Disallow: /
 
 # Block access to build files and assets folders if not needed for indexing
 Disallow: /assets/

@@ -123,7 +123,7 @@ const TermsOfService: React.FC = () => {
       <p>
         If you have any questions about these Terms, you can contact us at:
         <br />
-        <strong>support@linkszar.com</strong>
+        <strong>contact@linkszar.com</strong>
       </p>
     </div>
   );

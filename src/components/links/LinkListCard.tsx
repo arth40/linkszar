@@ -48,7 +48,7 @@ const LinkListCard: React.FC<LinkListCardProps> = (props) => {
       <Card className="w-full cursor-pointer">
         {props.view === 'thumbnail' && (
           <CardHeader onClick={() => handleOpenInNewTab()}>
-            <div className="flex w-full h-24 md:h-30 items-center justify-center">
+            <div className="flex w-full h-20 md:h-30 items-center justify-center">
               <Image
                 removeWrapper
                 src={`https://www.google.com/s2/favicons?domain=${props.link.url}&sz=256`}
@@ -57,52 +57,55 @@ const LinkListCard: React.FC<LinkListCardProps> = (props) => {
             </div>
           </CardHeader>
         )}
-        <CardBody
-          className="overflow-visible py-2 flex flex-row items-center gap-4 mb-2"
-          onClick={() => handleOpenInNewTab()}
-        >
-          {props.view === 'list' && (
-            <Icon
-              icon="material-symbols:link-rounded"
-              className="text-4xl cursor-pointer text-primary-800"
-            />
-          )}
-          <div className="flex w-full">
-            <div className="flex flex-col w-full gap-1">
-              <p className="font-semibold">{props.link.placeholder}</p>
-              <p>{props.link.collectionName}</p>
-            </div>
-            <div className="actions flex pl-1 justify-center gap-2">
-              <Tooltip content="Copy Link" placement="top">
-                <Button
-                  isIconOnly
-                  variant="bordered"
-                  size="sm"
-                  className="p-0"
-                  onPress={() => copyToClipboard()}
-                >
-                  <Icon
-                    icon="solar:copy-bold-duotone"
-                    className="text-xl cursor-pointer text-primary-800"
-                  />
-                </Button>
-              </Tooltip>
-              {props.page === 'collection' && (
-                <Tooltip content="Delete Link" placement="top">
+        <CardBody className="py-2 mb-2" onClick={() => handleOpenInNewTab()}>
+          <div className="flex w-full gap-4">
+            {props.view === 'list' && (
+              <div className="flex w-12 h-full items-center">
+                <Icon
+                  icon="material-symbols:link-rounded"
+                  className="text-4xl cursor-pointer text-primary-800"
+                />
+              </div>
+            )}
+            <div className="flex flex-1">
+              <div className="flex flex-col flex-1 gap-1">
+                <p className="font-semibold break-all">
+                  {props.link.placeholder}
+                </p>
+                <p className="break-all">{props.link.collectionName}</p>
+              </div>
+              <div className="actions flex pl-1 justify-center gap-2">
+                <Tooltip content="Copy Link" placement="top">
                   <Button
                     isIconOnly
                     variant="bordered"
                     size="sm"
                     className="p-0"
-                    onPress={() => handleDeleteLink()}
+                    onPress={() => copyToClipboard()}
                   >
                     <Icon
-                      icon="material-symbols:delete-rounded"
-                      className="text-xl cursor-pointer text-[#990000]"
+                      icon="solar:copy-bold-duotone"
+                      className="text-xl cursor-pointer text-primary-800"
                     />
                   </Button>
                 </Tooltip>
-              )}
+                {props.page === 'collection' && (
+                  <Tooltip content="Delete Link" placement="top">
+                    <Button
+                      isIconOnly
+                      variant="bordered"
+                      size="sm"
+                      className="p-0"
+                      onPress={() => handleDeleteLink()}
+                    >
+                      <Icon
+                        icon="material-symbols:delete-rounded"
+                        className="text-xl cursor-pointer text-[#990000]"
+                      />
+                    </Button>
+                  </Tooltip>
+                )}
+              </div>
             </div>
           </div>
         </CardBody>
