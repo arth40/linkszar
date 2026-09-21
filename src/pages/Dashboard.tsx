@@ -341,6 +341,7 @@ const Dashboard: React.FC = () => {
                 }}
               >
                 <div
+                  className="w-[390px] h-[844px] overflow-hidden"
                   style={{
                     transform: `scale(${PREVIEW_SCALE})`,
                     transformOrigin: 'top left',
