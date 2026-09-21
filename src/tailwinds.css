@@ -3,3 +3,19 @@
 /* Note: You may need to change the path to fit your project structure */
 @source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 @custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-paper: #f7f3ea;
+  --color-paper-2: #fffdf8;
+  --color-ink: #191712;
+  --color-ink-70: #504a3e;
+  --color-mist: #9c9587;
+  --color-ghost: #dcd4be;
+  --color-line: #e4ddcb;
+  --color-cobalt: #3d4fd1;
+  --color-ember: #ff6b45;
+  --color-danger-ink: #c6402f;
+
+  --font-display: 'Fraunces', serif;
+  --font-sans: 'Space Grotesk', sans-serif;
+}

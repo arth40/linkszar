@@ -3,14 +3,15 @@ import type { ToastOptions } from 'react-hot-toast';
 
 const errorOptions: ToastOptions = {
   style: {
-    fontFamily: 'Inter',
+    fontFamily: "'Space Grotesk', sans-serif",
     fontSize: '0.8rem',
     fontWeight: 600,
-    background: '#ffffff',
-    color: '#990000',
+    background: '#FFFFFF',
+    color: '#C6402F',
+    border: '1px solid #E4DDCB',
   },
   iconTheme: {
-    primary: '#990000',
+    primary: '#C6402F',
     secondary: '#ffffff',
   },
   duration: 3000,
@@ -18,14 +19,15 @@ const errorOptions: ToastOptions = {
 
 const successptions: ToastOptions = {
   style: {
-    fontFamily: 'Inter',
+    fontFamily: "'Space Grotesk', sans-serif",
     fontSize: '0.8rem',
     fontWeight: 600,
-    background: '#ffffff',
-    color: '#0d5231',
+    background: '#FFFFFF',
+    color: '#191712',
+    border: '1px solid #E4DDCB',
   },
   iconTheme: {
-    primary: '#0d5231',
+    primary: '#3D4FD1',
     secondary: '#ffffff',
   },
   duration: 3000,

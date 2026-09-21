@@ -26,11 +26,13 @@ const CommonModal: React.FC<CommonModalProps> = (props) => {
     } else {
       onClose();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.isOpen]);
   useEffect(() => {
-    if (!isOpen) {
-      props.closeModal && props.closeModal();
+    if (!isOpen && props.closeModal) {
+      props.closeModal();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
   return (
     <div>

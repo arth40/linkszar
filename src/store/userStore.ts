@@ -7,6 +7,9 @@ import {
   signOut,
   onAuthStateChanged,
   sendPasswordResetEmail,
+  sendEmailVerification,
+  deleteUser,
+  reload,
 } from 'firebase/auth';
 import { auth } from '../firebase';
 import type { UserDetails } from '../types/user';
@@ -21,19 +24,24 @@ interface AuthState {
   initialized: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<User | null>;
+  deleteCurrentUser: () => Promise<void>;
   logout: () => Promise<void>;
   sendPasswordReset: (email: string) => Promise<void>;
+  resendVerificationEmail: () => Promise<void>;
+  refreshUser: () => Promise<void>;
   setUserDetails: (details: UserDetails) => void;
   clearError: () => void;
   initialize: () => void;
+  unsubscribe: (() => void) | null;
 }
 
-export const useAuthStore = create<AuthState>((set, get) => ({
+export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   userDetails: null,
   loading: false,
   error: null,
   initialized: false,
+  unsubscribe: null,
 
   signIn: async (email: string, password: string) => {
     set({ loading: true, error: null });
@@ -56,7 +64,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         email,
         password
       );
-      toastMessage('success', 'User registered');
+      try {
+        await sendEmailVerification(userCreds.user);
+      } catch (verifyError) {
+        console.error('Send verification email error:', verifyError);
+        toastMessage(
+          'error',
+          'Account created, but the verification email failed to send. You can resend it from the dashboard.'
+        );
+      }
       return userCreds.user;
     } catch (error) {
       set({ error: (error as Error).message });
@@ -68,6 +84,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       return null;
     } finally {
       set({ loading: false });
+    }
+  },
+
+  deleteCurrentUser: async () => {
+    if (auth.currentUser) {
+      await deleteUser(auth.currentUser);
     }
   },
 
@@ -101,6 +123,23 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
+  resendVerificationEmail: async () => {
+    if (!auth.currentUser) return;
+    try {
+      await sendEmailVerification(auth.currentUser);
+      toastMessage('success', 'Verification email sent');
+    } catch (error) {
+      console.error('Resend verification error:', error);
+      toastMessage('error', 'Could not send verification email');
+    }
+  },
+
+  refreshUser: async () => {
+    if (!auth.currentUser) return;
+    await reload(auth.currentUser);
+    set({ user: auth.currentUser });
+  },
+
   setUserDetails: (details: UserDetails) => {
     set({ userDetails: details });
   },
@@ -110,10 +149,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   initialize: () => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       set({ user, initialized: true, loading: false });
-      await getUserData(user?.uid);
+      if (user) {
+        await getUserData(user.uid);
+      }
     });
 
-    // Store the unsubscribe function for cleanup
-    (get() as any).unsubscribe = unsubscribe;
+    set({ unsubscribe });
   },
 }));
