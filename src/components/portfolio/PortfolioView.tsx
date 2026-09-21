@@ -23,7 +23,7 @@ const PortfolioView: React.FC<PortfolioViewProps> = ({
   showFooterCta = true,
 }) => {
   return (
-    <div className="w-[390px] h-[844px] box-border bg-paper flex flex-col overflow-hidden shrink-0">
+    <div className="w-full h-full box-border bg-paper flex flex-col shrink-0">
       <div className="flex items-center justify-between px-6 pt-5">
         <span className="text-[11.5px] font-semibold tracking-wide text-mist uppercase">
           linkszar.com/{handle}

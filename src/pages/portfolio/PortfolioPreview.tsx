@@ -66,7 +66,7 @@ const PortfolioPreview: React.FC = () => {
           )}
 
           {!isLoading && portfolio && (
-            <div className="rounded-[32px] border border-line shadow-sm overflow-hidden">
+            <div className="w-full max-w-[420px] rounded-[32px] border border-line shadow-sm overflow-hidden">
               <PortfolioView
                 handle={portfolio.handle}
                 name={portfolio.name}

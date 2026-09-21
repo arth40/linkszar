@@ -57,8 +57,8 @@ const Landing: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-col-reverse lg:flex-row items-center gap-14 px-6 md:px-16 py-10 flex-1">
-          <div className="flex-1 flex flex-col gap-7 max-w-[560px]">
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-14 px-6 md:px-16 py-10 flex-1">
+          <div className="flex-1 flex flex-col gap-7 max-w-[560px] min-w-0">
             <div className="inline-flex items-center gap-2 bg-white border border-line px-3.5 py-1.5 rounded-full w-fit">
               <span className="w-[7px] h-[7px] rounded-full bg-ember" />
               <span className="text-[12.5px] font-semibold text-ink-70">
@@ -108,10 +108,10 @@ const Landing: React.FC = () => {
             </div>
           </div>
 
-          <div className="shrink-0">
-            <div className="rounded-[36px] bg-ink p-3.5 shadow-2xl">
-              <div className="rounded-[26px] overflow-hidden" style={{ width: 390 * 0.82, height: 844 * 0.82 }}>
-                <div style={{ transform: 'scale(0.82)', transformOrigin: 'top left' }}>
+          <div className="shrink-0 self-center">
+            <div className="rounded-[36px] bg-ink p-3.5 shadow-2xl w-fit">
+              <div className="rounded-[26px] overflow-hidden w-[234px] h-[506px] lg:w-[320px] lg:h-[692px]">
+                <div className="w-[390px] h-[844px] overflow-hidden scale-[0.6] lg:scale-[0.82] origin-top-left">
                   <PortfolioView
                     handle="arth"
                     name="Arth Panchani"
