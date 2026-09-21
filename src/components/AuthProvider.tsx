@@ -16,10 +16,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     // Cleanup on unmount
     return () => {
-      const store = useAuthStore.getState() as any;
-      if (store.unsubscribe) {
-        store.unsubscribe();
-      }
+      useAuthStore.getState().unsubscribe?.();
     };
   }, [initialize]);
 

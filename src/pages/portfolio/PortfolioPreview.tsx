@@ -1,32 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import Topbar from '../../components/common/Topbar';
-import { getPorfolio } from '../../services/portfolioService';
-import type { Portfolio } from '../../types/portfolio.';
-import PortfolioLinkCard from '../../components/portfolio/PortfolioLinkCard';
-import { useLocation, useParams } from 'react-router-dom';
+import { getPublicPortfolioByHandle } from '../../services/portfolioService';
+import type { PublicPortfolio } from '../../types/portfolio';
+import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { Button } from '@heroui/button';
-import { Icon } from '@iconify/react';
+import { Spinner } from '@heroui/spinner';
+import PortfolioView from '../../components/portfolio/PortfolioView';
 import toastMessage from '../../services/toasterService';
+import Logo from '../../components/brand/Logo';
+import { Link } from 'react-router-dom';
 
 const PortfolioPreview: React.FC = () => {
-  const { id } = useParams();
-  const location = useLocation();
+  const { handle } = useParams();
 
-  const [portfolio, setPortfolio] = useState<Portfolio | null>(null);
+  const [portfolio, setPortfolio] = useState<PublicPortfolio | null>(null);
   const [isLoading, setLoading] = useState(true);
+
   useEffect(() => {
     fetchPortfolio();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handle]);
 
   const fetchPortfolio = async () => {
-    const portfolio = await getPorfolio(id);
-    setPortfolio(portfolio);
+    setLoading(true);
+    if (handle) {
+      const data = await getPublicPortfolioByHandle(handle);
+      setPortfolio(data);
+    }
     setLoading(false);
   };
 
-  const sharePorfolioLink = async () => {
-    const link = `${window.location.origin}${location.pathname}`;
+  const shareLink = async () => {
+    const link = `${window.location.origin}/${handle}`;
     if (navigator?.clipboard?.writeText) {
       await navigator.clipboard.writeText(link);
       toastMessage('success', 'Link copied');
@@ -36,46 +40,40 @@ const PortfolioPreview: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>{`${portfolio?.name} ~ Linkszar`}</title>
-        <meta name="description" content={`Portfolio of ${portfolio?.name}`} />
-        <link rel="canonical" href={`https://linkszar.com/potfolio/${id}`} />
+        <title>{`${portfolio?.name || handle} ~ Linkszar`}</title>
+        <meta
+          name="description"
+          content={`${portfolio?.name || handle}'s links on Linkszar`}
+        />
+        <link rel="canonical" href={`https://linkszar.com/${handle}`} />
         <meta name="robots" content="index, follow" />
       </Helmet>
-      <div className="flex w-screen h-screen py-6 bg-primary-50">
-        <Topbar />
-        <div className="flex w-full mt-20 pb-4 px-4 md:px-20 lg:mx-60">
-          {!portfolio && !isLoading && <p>Portfolio not found</p>}
-          {portfolio && (
-            <div className="relative flex w-full flex-col gap-6 items-center">
-              <Button
-                isIconOnly
-                variant="bordered"
-                size="md"
-                className="absolute right-4 border-2 border-primary-900"
-                onPress={() => sharePorfolioLink()}
-              >
-                <Icon
-                  icon="fluent:share-24-filled"
-                  className="text-2xl cursor-pointer"
-                />
-              </Button>
-              <h1 className="text-4xl font-bold px-5 mr-12 break-all">
-                {portfolio.name}
-              </h1>
-              <div className="flex flex-col w-full overflow-y-auto">
-                {portfolio.about && (
-                  <div className="flex mx-2 border-2 border-primary-100 rounded-lg p-4">
-                    <p>{portfolio.about}</p>
-                  </div>
-                )}
-                <div className="flex flex-col py-4 md:py-4 px-4 md:px-8 w-full gap-2">
-                  {portfolio.links &&
-                    portfolio.links.length > 0 &&
-                    portfolio.links.map((link, index) => (
-                      <PortfolioLinkCard key={index} link={link} />
-                    ))}
-                </div>
-              </div>
+
+      <div className="min-h-screen w-full bg-paper flex flex-col items-center">
+        <div className="py-6">
+          <Link to="/">
+            <Logo />
+          </Link>
+        </div>
+
+        <div className="flex-1 flex items-center justify-center w-full pb-10 px-4">
+          {isLoading && <Spinner size="lg" />}
+
+          {!isLoading && !portfolio && (
+            <p className="text-mist text-sm">
+              No linkszar found at this address.
+            </p>
+          )}
+
+          {!isLoading && portfolio && (
+            <div className="rounded-[32px] border border-line shadow-sm overflow-hidden">
+              <PortfolioView
+                handle={portfolio.handle}
+                name={portfolio.name}
+                about={portfolio.about}
+                links={portfolio.links}
+                onShare={shareLink}
+              />
             </div>
           )}
         </div>

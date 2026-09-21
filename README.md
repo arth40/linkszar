@@ -70,7 +70,10 @@
 
 ## 🧠 Features
 
-- ✅
+- Claim a handle and get a short, shareable link: `linkszar.co/yourname`
+- One dashboard to edit your display name, bio, and links, with a live preview
+- Email verification on sign-up (Firebase Auth)
+- No accounts photos, no clutter — just a profile and its links
 
 ---
 

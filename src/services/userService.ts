@@ -10,7 +10,8 @@ export const saveUserData = async (user: UserDetails, userId?: string) => {
     await set(ref(database, 'users/' + userId), {
       email: user.email,
       role: user.role,
-      username: user.username,
+      name: user.name,
+      handle: user.handle,
     });
     await setDoc(doc(firestore, 'userEmails', user.email), {
       uid: userId,
@@ -42,15 +43,15 @@ export const getUserData = async (
   }
 };
 
-export const updateUserName = async (
+export const updateDisplayName = async (
   userId: string = '',
-  username: string
+  name: string
 ): Promise<void> => {
   try {
     const userRef = ref(database, `users/${userId}`);
-    await update(userRef, { username });
+    await update(userRef, { name });
     await getUserData(userId);
   } catch (error) {
-    console.error('Error getting room data:', error);
+    console.error('Error updating display name:', error);
   }
 };

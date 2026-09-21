@@ -1,33 +1,53 @@
 import React from 'react';
-import AuthLayout from '../components/AuthLayout';
+import AuthSplitLayout from '../components/AuthSplitLayout';
 import { Button } from '@heroui/button';
 import { Form } from '@heroui/form';
 import { Input } from '@heroui/input';
 import { Icon } from '@iconify/react';
 import { useAuthStore } from '../store/userStore';
 import { getUserData, saveUserData } from '../services/userService';
-import { useNavigate } from 'react-router-dom';
+import {
+  claimHandle,
+  isHandleAvailable,
+  isHandleFormatValid,
+  sanitizeHandle,
+} from '../services/handleService';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import toastMessage from '../services/toasterService';
+
+const inputClassNames = {
+  label: 'text-[12.5px] font-semibold text-ink-70',
+  inputWrapper:
+    'border-[1.5px] border-ink rounded-xl bg-white data-[hover=true]:border-ink group-data-[focus=true]:border-ink shadow-none',
+  input: 'font-sans text-[14.5px]',
+};
+
+type HandleStatus = 'idle' | 'checking' | 'available' | 'taken' | 'invalid';
 
 const Register: React.FC = () => {
+  const [searchParams] = useSearchParams();
+
   const [isVisible, setIsVisible] = React.useState(false);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [username, setUsername] = React.useState('');
-  const [isValid, setIsValid] = React.useState(false);
+  const [handle, setHandle] = React.useState(
+    sanitizeHandle(searchParams.get('handle') || '')
+  );
+  const [handleStatus, setHandleStatus] = React.useState<HandleStatus>('idle');
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  const { signUp } = useAuthStore();
+  const { signUp, deleteCurrentUser } = useAuthStore();
   const navigate = useNavigate();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  // Add password validation function
   const validatePassword = (value: string) => {
     const hasMinLength = value.length >= 8;
     const hasLowerCase = /[a-z]/.test(value);
     const hasUpperCase = /[A-Z]/.test(value);
     const hasNumber = /[0-9]/.test(value);
-    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value);
+    const hasSpecialChar = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(value);
 
     return {
       isValid:
@@ -44,198 +64,244 @@ const Register: React.FC = () => {
     };
   };
 
-  // Add effect to validate password on change
-  React.useEffect(() => {
-    const validation = validatePassword(password);
-    setIsValid(validation.isValid);
-  }, [password]);
-
-  const handleUsernameChange = (value: string) => {
-    const worldAlphaNumRegex = /^[\p{L} ]$/u;
-    if (!value || worldAlphaNumRegex.test(value[value.length - 1])) {
-      setUsername(value);
-    }
-    setIsValid(value.length <= 40);
-  };
-
-  // Get validation results for rendering
   const validation = validatePassword(password);
+
+  React.useEffect(() => {
+    if (!handle) {
+      setHandleStatus('idle');
+      return;
+    }
+    if (!isHandleFormatValid(handle)) {
+      setHandleStatus('invalid');
+      return;
+    }
+    setHandleStatus('checking');
+    const timeout = setTimeout(async () => {
+      const available = await isHandleAvailable(handle);
+      setHandleStatus(available ? 'available' : 'taken');
+    }, 450);
+    return () => clearTimeout(timeout);
+  }, [handle]);
+
+  const handleHandleChange = (value: string) => {
+    setHandle(sanitizeHandle(value));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isValid) return;
+    if (!validation.isValid || handleStatus !== 'available') return;
 
-    const user = await signUp(email, password);
-    await saveUserData(
-      {
-        email,
-        role: 'user',
-        username,
-      },
-      user?.uid
-    );
+    setIsSubmitting(true);
+    try {
+      const user = await signUp(email, password);
+      if (!user) return;
 
-    await getUserData(user?.uid);
+      const claimed = await claimHandle(handle, user.uid);
+      if (!claimed) {
+        toastMessage('error', 'That handle was just taken — try another');
+        setHandleStatus('taken');
+        await deleteCurrentUser();
+        return;
+      }
+
+      const name = handle.charAt(0).toUpperCase() + handle.slice(1);
+      await saveUserData({ email, role: 'user', name, handle }, user.uid);
+      await getUserData(user.uid);
+      toastMessage('success', 'Welcome to linkszar');
+      navigate('/');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const toLogin = () => {
-    navigate('/login');
-  };
+  const toLogin = () => navigate('/login');
+
+  const requirements: Array<[boolean, string]> = [
+    [validation.hasMinLength, 'At least 8 characters'],
+    [validation.hasLowerCase, 'One lowercase letter'],
+    [validation.hasUpperCase, 'One uppercase letter'],
+    [validation.hasNumber, 'One number'],
+    [validation.hasSpecialChar, 'One special character'],
+  ];
 
   return (
     <>
       <Helmet>
-        <title>Linkszar ~ Register</title>
-        <meta name="description" content="Register to Linkszar" />
+        <title>Linkszar ~ Create your link</title>
+        <meta name="description" content="Create your linkszar" />
         <link rel="canonical" href="https://linkszar.com/register" />
         <meta name="robots" content="index, follow" />
       </Helmet>
-      <AuthLayout>
-        <div className="flex w-full justify-center">
-          <Form
-            className="w-full max-w-xs flex flex-col gap-4"
-            onSubmit={handleSubmit}
-          >
-            <Input
-              isRequired
-              errorMessage="Please enter a valid email"
-              label="Email"
-              labelPlacement="outside"
-              name="email"
-              placeholder="Enter your email"
-              type="email"
-              onValueChange={setEmail}
-            />
-            <Input
-              isRequired
-              label="Name"
-              labelPlacement="outside"
-              name="username"
-              value={username}
-              placeholder="Enter your Name"
-              type="text"
-              isInvalid={username.length > 40}
-              onValueChange={handleUsernameChange}
-              errorMessage={'Max. length 40'}
-            />
-            <Input
-              isRequired
-              label="Password"
-              name="password"
-              labelPlacement="outside"
-              placeholder="Enter your password"
-              value={password}
-              onValueChange={setPassword}
-              endContent={
-                <Button
-                  isIconOnly
-                  variant="light"
-                  size="sm"
-                  onPress={toggleVisibility}
-                  className="focus:outline-none"
-                  aria-label={isVisible ? 'Hide password' : 'Show password'}
-                >
-                  <Icon
-                    icon={isVisible ? 'lucide:eye-off' : 'lucide:eye'}
-                    className="text-default-400 text-lg"
-                  />
-                </Button>
-              }
-              type={isVisible ? 'text' : 'password'}
-              className="mt-2"
-            />
-            {password && (
-              <div className="space-y-2 px-4 text-small">
-                <p className="font-medium">Password requirements:</p>
-                <ul className="space-y-1">
-                  <li
-                    className={`flex items-center gap-2 ${validation.hasMinLength ? 'text-success' : 'text-danger'}`}
-                  >
-                    <Icon
-                      icon={
-                        validation.hasMinLength
-                          ? 'lucide:check-circle'
-                          : 'lucide:x-circle'
-                      }
-                    />
-                    <span>At least 8 characters</span>
-                  </li>
-                  <li
-                    className={`flex items-center gap-2 ${validation.hasLowerCase ? 'text-success' : 'text-danger'}`}
-                  >
-                    <Icon
-                      icon={
-                        validation.hasLowerCase
-                          ? 'lucide:check-circle'
-                          : 'lucide:x-circle'
-                      }
-                    />
-                    <span>One lowercase letter</span>
-                  </li>
-                  <li
-                    className={`flex items-center gap-2 ${validation.hasUpperCase ? 'text-success' : 'text-danger'}`}
-                  >
-                    <Icon
-                      icon={
-                        validation.hasUpperCase
-                          ? 'lucide:check-circle'
-                          : 'lucide:x-circle'
-                      }
-                    />
-                    <span>One uppercase letter</span>
-                  </li>
-                  <li
-                    className={`flex items-center gap-2 ${validation.hasNumber ? 'text-success' : 'text-danger'}`}
-                  >
-                    <Icon
-                      icon={
-                        validation.hasNumber
-                          ? 'lucide:check-circle'
-                          : 'lucide:x-circle'
-                      }
-                    />
-                    <span>One number</span>
-                  </li>
-                  <li
-                    className={`flex items-center gap-2 ${validation.hasSpecialChar ? 'text-success' : 'text-danger'}`}
-                  >
-                    <Icon
-                      icon={
-                        validation.hasSpecialChar
-                          ? 'lucide:check-circle'
-                          : 'lucide:x-circle'
-                      }
-                    />
-                    <span>One special character</span>
-                  </li>
-                </ul>
-              </div>
-            )}
-            <div className="w-full my-2">
-              <p className="text-md text-center">
-                Already an user?&nbsp;
-                <span
-                  className="text-primary font-semibold cursor-pointer"
-                  onClick={() => toLogin()}
-                >
-                  Log in
-                </span>
-              </p>
-            </div>
-            <div className="flex w-full gap-2 justify-center mt-4">
-              <Button
-                color="primary"
-                type="submit"
-                variant="flat"
-                className="w-32 font-semibold text-primary-400"
-              >
-                Register
-              </Button>
-            </div>
-          </Form>
+      <AuthSplitLayout
+        tagline="Your links deserve one door, not ten tabs."
+        footerLabel="Already have a linkszar?"
+        footerLinkText="Log in instead"
+        footerLinkTo="/login"
+      >
+        <div>
+          <p className="font-display font-semibold text-[28px] m-0">
+            Create your linkszar
+          </p>
+          <p className="text-[14px] text-mist mt-2 mb-0">
+            Takes under a minute. No credit card.
+          </p>
         </div>
-      </AuthLayout>
+
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
+            <span className="w-5 h-5 rounded-full bg-cobalt text-paper text-[11px] font-bold flex items-center justify-center">
+              1
+            </span>
+            <span className="text-[12px] font-semibold">Account</span>
+          </div>
+          <span className="flex-1 h-px bg-line" />
+          <div className="flex items-center gap-1.5">
+            <span className="w-5 h-5 rounded-full bg-line text-mist text-[11px] font-bold flex items-center justify-center">
+              2
+            </span>
+            <span className="text-[12px] font-semibold text-mist">
+              Verify email
+            </span>
+          </div>
+          <span className="flex-1 h-px bg-line" />
+          <div className="flex items-center gap-1.5">
+            <span className="w-5 h-5 rounded-full bg-line text-mist text-[11px] font-bold flex items-center justify-center">
+              3
+            </span>
+            <span className="text-[12px] font-semibold text-mist">
+              Go live
+            </span>
+          </div>
+        </div>
+
+        <Form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-1.5 w-full">
+            <label
+              htmlFor="handle"
+              className="text-[12.5px] font-semibold text-ink-70"
+            >
+              Your handle
+            </label>
+            <div className="flex items-center border-[1.5px] border-ink rounded-xl px-4 py-3 gap-0.5">
+              <span className="text-[14.5px] text-mist">linkszar.com/</span>
+              <input
+                id="handle"
+                type="text"
+                value={handle}
+                onChange={(e) => handleHandleChange(e.target.value)}
+                className="border-none outline-none text-[14.5px] font-sans font-semibold flex-1 bg-transparent min-w-0"
+                placeholder="yourname"
+              />
+              {handleStatus === 'checking' && (
+                <Icon icon="svg-spinners:ring-resize" className="text-mist" />
+              )}
+              {handleStatus === 'available' && (
+                <Icon icon="lucide:check" className="text-cobalt" />
+              )}
+              {(handleStatus === 'taken' || handleStatus === 'invalid') && (
+                <Icon
+                  icon="lucide:x"
+                  className="text-danger-ink"
+                />
+              )}
+            </div>
+            {handleStatus === 'taken' && (
+              <span className="text-[12px] text-danger-ink">
+                That handle is already taken
+              </span>
+            )}
+            {handleStatus === 'invalid' && (
+              <span className="text-[12px] text-danger-ink">
+                3-30 characters: lowercase letters, numbers, hyphens
+              </span>
+            )}
+          </div>
+
+          <Input
+            isRequired
+            errorMessage="Please enter a valid email"
+            label="Email"
+            labelPlacement="outside"
+            name="email"
+            placeholder="you@example.com"
+            type="email"
+            onValueChange={setEmail}
+            classNames={inputClassNames}
+          />
+
+          <Input
+            isRequired
+            label="Password"
+            name="password"
+            labelPlacement="outside"
+            placeholder="Enter your password"
+            value={password}
+            onValueChange={setPassword}
+            classNames={inputClassNames}
+            endContent={
+              <Button
+                isIconOnly
+                variant="light"
+                size="sm"
+                onPress={toggleVisibility}
+                className="focus:outline-none"
+                aria-label={isVisible ? 'Hide password' : 'Show password'}
+              >
+                <Icon
+                  icon={isVisible ? 'lucide:eye-off' : 'lucide:eye'}
+                  className="text-mist text-lg"
+                />
+              </Button>
+            }
+            type={isVisible ? 'text' : 'password'}
+          />
+
+          {password && (
+            <ul className="flex flex-col gap-1 px-1 text-[12.5px]">
+              {requirements.map(([met, label]) => (
+                <li
+                  key={label}
+                  className={`flex items-center gap-2 ${met ? 'text-cobalt' : 'text-mist'}`}
+                >
+                  <Icon icon={met ? 'lucide:check-circle' : 'lucide:circle'} />
+                  <span>{label}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <Button
+            type="submit"
+            isDisabled={!validation.isValid || handleStatus !== 'available'}
+            isLoading={isSubmitting}
+            className="mt-1 bg-ink text-paper font-sans font-semibold rounded-xl h-[50px] text-[15px]"
+          >
+            Create account
+          </Button>
+
+          <div className="flex items-start gap-2.5 bg-white border border-line rounded-xl px-3.5 py-3">
+            <Icon
+              icon="lucide:mail-check"
+              className="text-cobalt text-[16px] mt-0.5 shrink-0"
+            />
+            <p className="text-[12.5px] leading-[1.5] text-ink-70 m-0">
+              We'll send a verification link to your email — your page goes
+              live once it's confirmed.
+            </p>
+          </div>
+
+          <p className="md:hidden text-[14px] text-center w-full text-ink-70">
+            Already a user?{' '}
+            <span
+              className="text-cobalt font-semibold cursor-pointer"
+              onClick={toLogin}
+            >
+              Log in
+            </span>
+          </p>
+        </Form>
+      </AuthSplitLayout>
     </>
   );
 };

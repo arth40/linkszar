@@ -1,0 +1,22 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "portfolio": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "handles": {
+      "$handle": {
+        ".read": true,
+        ".write": "auth != null && (!data.exists() || data.val() === auth.uid)"
+      }
+    }
+  }
+}
